@@ -1,8 +1,10 @@
 # ThingsOnFire by AnimalsOnFire
 
 ## Roles
-- Qina Liu: Project Manager
-- 
+- Qina Liu: Project Manager, Frontend
+- Joshua Kloepfer: Backend 
+- Yaying Liang Li: Backend
+- Thomas Yu: Frontend
 
 ## Description
 Things will be on fire
