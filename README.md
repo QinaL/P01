@@ -19,5 +19,6 @@ Things will be on fire
 ```$ cd P01 ``` <br>
 ```$ pip install -r requirements.txt``` <br><br> 
 - Run the app <br>
-```$ python3 run.py``` <br><br>
+```$ cd app
+```$ python3 __init__.py``` <br><br>
 - Open the website at http://127.0.0.1:5000/
