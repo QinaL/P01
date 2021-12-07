@@ -1,0 +1,6 @@
+AnimalsOnFire -- Thomas Yu, Yaying Liang Li, Joshua Kloepfer, Qina Liu
+SoftDev
+P01 -- ThingsOnFire
+
+qinaL -- 2021-12-07 18:45
+- made devlog and app
