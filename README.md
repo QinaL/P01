@@ -1,13 +1,13 @@
-#ThingsOnFire by AnimalsOnFire
+# ThingsOnFire by AnimalsOnFire
 
-##Roles
+## Roles
 - Qina Liu: Project Manager
 - 
 
-##Description
+## Description
 Things will be on fire
   
-##Launch Codes
+## Launch Codes
 - Install virtual environment <br>
 ```$ python3 -m venv env``` <br>
 ```$ source env/bin/activate``` <br><br>
