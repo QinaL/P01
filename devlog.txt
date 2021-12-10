@@ -14,4 +14,7 @@ thomasY -- 2021-12-09 20:37
 
 qinaL -- 2021-12-09 21:28
 - added some small specifications/illustration to database
-- added optional risky questions for if we have additional time to implement to increase fun factor 
+- added optional risky questions for if we have additional time to implement to increase fun factor \
+
+yayingLL -- 2021-12-10 09:20
+- added project description
