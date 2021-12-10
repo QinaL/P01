@@ -3,6 +3,11 @@ SoftDev
 P01 -- ThingsOnFire
 
 qinaL -- 2021-12-07 18:52
-- made devlog, __init__.py, and did ReadMe; project journey starts here :) 
+- made devlog, __init__.py, and did ReadMe; project journey starts here :)
 
-
+thomasY -- 2021-12-09 20:37
+- Updated design doc
+- Fixed tables to deal avoid lists in a db entry/row
+  - Insead opting for a table per user (table name = username)
+- Added to API section
+  - Explained more clearly what each trivia API provides and what we want to use them for
