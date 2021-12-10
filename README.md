@@ -7,7 +7,7 @@
 - Thomas Yu: Frontend
 
 ## Description
-Things will be on fire
+Have an animal you don’t like? Too much peace in your humble world? Want to destroy some furry creatures? Well, here’s to your wildest fantasies coming true! ThingsOnFire is a collectible website where users can answer trivia questions to collect different items. Answer the question correctly, and you get the cute little furry animal; incorrectly, and you get to see the cursed animal burned alive. Compete against other users in the leaderboard while flexing your random collection of knowledge!
   
 ## Launch Codes
 - Install virtual environment <br>
