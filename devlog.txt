@@ -18,3 +18,6 @@ qinaL -- 2021-12-09 21:28
 
 yayingLL -- 2021-12-10 09:20
 - added project description
+
+qinaL -- 2021-12-11 22:58 
+- added requirements.txt 
