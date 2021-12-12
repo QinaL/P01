@@ -21,3 +21,9 @@ yayingLL -- 2021-12-10 09:20
 
 qinaL -- 2021-12-11 22:58 
 - added requirements.txt 
+
+qinaL -- 2021-12-12 16:03
+- added Flask to __init__.py, now can run __init__.py to get functional localhost website
+- created templates and home.html with link to css and bootstrap
+- created static and css folder and style.css 
+- now have home landing page that displays summary pitch of site
