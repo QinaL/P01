@@ -27,3 +27,6 @@ qinaL -- 2021-12-12 16:03
 - created templates and home.html with link to css and bootstrap
 - created static and css folder and style.css 
 - now have home landing page that displays summary pitch of site
+
+joshuaK -- 2021-12-12 18:05
+- added login, register, and table structure
