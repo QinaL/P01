@@ -1,4 +1,4 @@
-from os import urandom 
+from os import urandom
 from flask import Flask, render_template, request, session, redirect
 import sqlite3, os.path
 
@@ -16,12 +16,12 @@ def home():
     db.commit()
     db.close()
     return render_template('home.html')
-    
+
 @app.route("/login",  methods=['GET', 'POST'])
 def login():
     return render_template('login.html')
 
-# authication of login
+# authentication of login
 @app.route("/auth", methods=['GET', 'POST'])
 def auth():
     if (request.method == 'POST'):
@@ -50,8 +50,8 @@ def register():
         return redirect("/")
     else:
         return render_template("register.html")
-        
-    
+
+
 @app.route("/trivia", methods=['POST', 'GET'])
 def trivia():
     return redirect('/')
@@ -59,4 +59,3 @@ def trivia():
 if __name__ == "__main__":
     app.debug = True
     app.run()
-    
