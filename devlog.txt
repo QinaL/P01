@@ -30,3 +30,13 @@ qinaL -- 2021-12-12 16:03
 
 joshuaK -- 2021-12-12 18:05
 - added login, register, and table structure
+
+qinaL -- 2021-12-13 20:11
+- added css links to login and regiser html
+- made it so can see home page and use trivia w/o loggging in
+- register and login buttons are on separate pages so traversing login --> register --> login is more intuitive now 
+- still need to do
+    - when users fails to register and logi (bad username/password, login w/o register)
+    - need home page to change when logged in (no login button b/c user is logged in
+- issue 
+    - if user does not land on "/" page first, then table won't be created
