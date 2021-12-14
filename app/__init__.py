@@ -63,7 +63,7 @@ def register():
             return render_template("register.html", error="Username taken already")
         db.commit()
         db.close()
-        return redirect("/")
+        return redirect("/login")
     else:
         return render_template("register.html")
 
