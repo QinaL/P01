@@ -1,4 +1,4 @@
-from os import MFD_HUGE_SHIFT, urandom 
+from os import urandom 
 from flask import Flask, render_template, request, session, redirect
 import sqlite3, os.path
 
@@ -10,15 +10,18 @@ def islogged():
 
 @app.route("/", methods=['GET', 'POST'])
 def home():
-    if islogged():
-        return render_template('home.html')
-    else:
-        db = sqlite3.connect("users.db")
-        c = db.cursor()
-        c.execute("CREATE TABLE IF NOT EXISTS users(username TEXT, password TEXT, UNIQUE(username))")
-        db.commit()
-        db.close()
-        return render_template('login.html')
+    db = sqlite3.connect("users.db")
+    c = db.cursor()
+    c.execute("CREATE TABLE IF NOT EXISTS users(username TEXT, password TEXT, UNIQUE(username))")
+    db.commit()
+    db.close()
+    return render_template('home.html')
+    
+@app.route("/login",  methods=['GET', 'POST'])
+def login():
+    return render_template('login.html')
+
+# authication of login
 @app.route("/auth", methods=['GET', 'POST'])
 def auth():
     if (request.method == 'POST'):
@@ -31,6 +34,7 @@ def auth():
             session['password'] = request.form['password']
         db.close()
     return redirect('/')
+
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     if (request.method == 'POST'):
@@ -46,6 +50,8 @@ def register():
         return redirect("/")
     else:
         return render_template("register.html")
+        
+    
 @app.route("/trivia", methods=['POST', 'GET'])
 def trivia():
     return redirect('/')
