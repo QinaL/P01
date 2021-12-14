@@ -47,7 +47,7 @@ def register():
             c.execute(table)
         db.commit()
         db.close()
-        return redirect("/")
+        return redirect("/login")
     else:
         return render_template("register.html")
         
