@@ -29,7 +29,7 @@ def auth():
         c = db.cursor()
         c.execute("SELECT username AND password FROM users WHERE username=? AND password=?", (request.form['username'], request.form['password']))
         user = c.fetchone()
-        if (user != None):
+        if (user != None): #user exists
             session['username'] = request.form['username']
             session['password'] = request.form['password']
         db.close()
@@ -38,13 +38,29 @@ def auth():
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     if (request.method == 'POST'):
+        username = request.form.get("username")
+        password = request.form.get("password")
+        reenterpasswd = request.form.get("reenterpasswd")
+
+        #error handling
+        if username == '':
+            return render_template("register.html", error="Empty username, who are you?")
+        elif password == '':
+            return render_template("register.html", error="Empty password, you'll get hacked y'know :)")
+        elif password != reenterpasswd:
+            return render_template("register.html", error="Passwords don't match")
+
+        #look in users.db and see if user with username and password combination exists
         db = sqlite3.connect('users.db')
         c = db.cursor()
         c.execute("SELECT username AND password FROM users WHERE username=? AND password=?", (request.form['username'], request.form['password']))
-        if (c.fetchone() == None):
+
+        if (c.fetchone() == None): #user doesn't exist; continue with registration
             c.execute("INSERT INTO users(username, password) VALUES(?, ?)", (request.form['username'], request.form['password']))
             table = "CREATE TABLE {name}(Type TEXT, Object TEXT)".format(name=request.form['username'])
             c.execute(table)
+        else: #error: username already taken
+            return render_template("register.html", error="Username taken already")
         db.commit()
         db.close()
         return redirect("/")
