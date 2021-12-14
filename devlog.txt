@@ -19,13 +19,13 @@ qinaL -- 2021-12-09 21:28
 yayingLL -- 2021-12-10 09:20
 - added project description
 
-qinaL -- 2021-12-11 22:58 
-- added requirements.txt 
+qinaL -- 2021-12-11 22:58
+- added requirements.txt
 
 qinaL -- 2021-12-12 16:03
 - added Flask to __init__.py, now can run __init__.py to get functional localhost website
 - created templates and home.html with link to css and bootstrap
-- created static and css folder and style.css 
+- created static and css folder and style.css
 - now have home landing page that displays summary pitch of site
 
 joshuaK -- 2021-12-12 18:05
@@ -34,9 +34,12 @@ joshuaK -- 2021-12-12 18:05
 qinaL -- 2021-12-13 20:11
 - added css links to login and regiser html
 - made it so can see home page and use trivia w/o loggging in
-- register and login buttons are on separate pages so traversing login --> register --> login is more intuitive now 
+- register and login buttons are on separate pages so traversing login --> register --> login is more intuitive now
 - still need to do
     - when users fails to register and logi (bad username/password, login w/o register)
     - need home page to change when logged in (no login button b/c user is logged in
-- issue 
+- issue
     - if user does not land on "/" page first, then table won't be created
+
+yayingLL -- 2021-12-14 16:29
+- added error handling for register page (no username, no password, password don't match, username taken)
