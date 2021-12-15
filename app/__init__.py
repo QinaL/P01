@@ -45,7 +45,9 @@ def auth():
         else:
             c.execute("SELECT password FROM users WHERE username=? ", (username,))
             # password associated with username in database does not match password inputted
-            if c.fetchone() != password:
+            passin = c.fetchone()[0];
+            print(passin)
+            if passin != password:
                 return render_template("login.html", error="Wrong password")
             # password is correct
             else:
