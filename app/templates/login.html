@@ -13,11 +13,11 @@
     <body>
     	<nav class="navbar navbar-expand fixed-top navbar-light bg-light">
 	<div class="container-fluid">
-	    <a class="navbar-brand" href="home.html">ThingsOnFire</a>
+	    <a class="navbar-brand" href="/">ThingsOnFire</a>
 	    <div class="collapse navbar-collapse" id="navbarSupportedContent">
 	      <ul class="navbar-nav">
 		<li class="nav-item">
-		  <a class="nav-link active" aria-current="page" href="home">Home</a>
+		  <a class="nav-link active" aria-current="page" href="/">Home</a>
 		</li>
 		<li class="nav-item">
 		  <a class="nav-link active" href="#">Trivia</a>
@@ -40,7 +40,10 @@
               <input class="credential-input" type="password" name="password" placeholder="Password">
               <input id="credential-submit" type="submit" value="login">
           </form>
+            
+            {{ error }}
           <br>
+            
         Don't have an account, yet? Please, <a href= "register"> register </a>!
     </body>
 </html>
