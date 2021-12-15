@@ -99,7 +99,7 @@ def trivia():
         question = text[0]['question']
         id = text[0]['id']
         session['correctAnswer'] = text[0]['correctAnswer']
-        wrong = [answer]
+        wrong = [session['correctAnswer']]
         for x in text[0]['incorrectAnswers']:
             wrong.append(x)
         return render_template("trivia.html", question, id, wrong)
