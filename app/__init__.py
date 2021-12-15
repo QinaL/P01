@@ -25,35 +25,35 @@ def login():
 @app.route("/auth", methods=['GET', 'POST'])
 def auth():
     if (request.method == 'POST'):
-        
+
         username = request.form.get("username")
         password = request.form.get("password")
-        
+
         #error handling for empty username
         if username == '':
             return render_template("login.html", error="Empty username, who are you?")
-        
+
         db = sqlite3.connect('users.db')
         c = db.cursor()
-        
+
         c.execute("SELECT username FROM users WHERE username=? ", (username))
         # username inputted by user is not found in database
         if c.fetchone() == None:
             return render_template("login.html", error="Wrong username, spell correctly or register")
         # username is found
-        else:  
+        else:
             c.execute("SELECT password FROM users WHERE username=? ", (username))
             # password associated with username in database does not match password inputted
-            if c.fetchone() != password: 
+            if c.fetchone() != password:
                 return render_template("login.html", error="Wrong password")
             # password is correct
-            else: 
+            else:
                 session['username'] = request.form['username']
                 session['password'] = request.form['password']
         db.close()
         return redirect('/')
     #get method
-    else: 
+    else:
         return redirect('/login')
 
 @app.route("/register", methods=['GET', 'POST'])
@@ -96,3 +96,4 @@ def trivia():
 if __name__ == "__main__":
     app.debug = True
     app.run()
+    #test
