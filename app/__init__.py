@@ -1,6 +1,7 @@
 from os import urandom
 from flask import Flask, render_template, request, session, redirect
 import sqlite3, os.path
+import urllib, json
 
 app = Flask(__name__)
 app.secret_key = urandom(32)
@@ -36,13 +37,13 @@ def auth():
         db = sqlite3.connect('users.db')
         c = db.cursor()
 
-        c.execute("SELECT username FROM users WHERE username=? ", (username))
+        c.execute("SELECT username FROM users WHERE username=? ", (username,))
         # username inputted by user is not found in database
         if c.fetchone() == None:
             return render_template("login.html", error="Wrong username, spell correctly or register")
         # username is found
         else:
-            c.execute("SELECT password FROM users WHERE username=? ", (username))
+            c.execute("SELECT password FROM users WHERE username=? ", (username,))
             # password associated with username in database does not match password inputted
             if c.fetchone() != password:
                 return render_template("login.html", error="Wrong password")
@@ -91,7 +92,22 @@ def register():
 
 @app.route("/trivia", methods=['POST', 'GET'])
 def trivia():
-    return redirect('/')
+    #just start
+    if (request.method == 'GET'):
+        question = urllib.request.urlopen("https://api.trivia.willfry.co.uk/questions?limit=5")
+        text = json.load(question)
+        question = text[0]['question']
+        id = text[0]['id']
+        session['correctAnswer'] = text[0]['correctAnswer']
+        wrong = [answer]
+        for x in text[0]['incorrectAnswers']:
+            wrong.append(x)
+        return render_template("trivia.html", question, id, wrong)
+    else:
+        if request.form['answer'] == session['correctAnswer']:
+            return redirect('/trivia')
+        else:
+            return redirect('/')
 
 if __name__ == "__main__":
     app.debug = True
