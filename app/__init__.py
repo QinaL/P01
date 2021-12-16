@@ -98,17 +98,24 @@ def register():
 
 @app.route("/trivia", methods=['POST', 'GET'])
 def trivia():
-    #http = urllib.request.urlopen("https://api.trivia.willfry.co.uk/questions?limit=20") #HTTP Response object (containing the JSON info); contains 20 questions
-    http = urllib.request.urlopen("https://api.trivia.willfry.co.uk/questions?limit=1") #HTTP Response object (containing the JSON info); contains 1 question
-    questions = json.load(http) #questions is a list of dictionaries; each dictionary entry is a question + answers + info
-    print(questions)
+    if request.method == 'GET':
+        #http = urllib.request.urlopen("https://api.trivia.willfry.co.uk/questions?limit=20") #HTTP Response object (containing the JSON info); contains 20 questions
+        http = urllib.request.urlopen("https://api.trivia.willfry.co.uk/questions?limit=1") #HTTP Response object (containing the JSON info); contains 1 question
+        questions = json.load(http) #questions is a list of dictionaries; each dictionary entry is a question + answers + info
 
-    for value in questions: #for every dictionary in the questions list
-        question = value.get('question') #store the value of the key 'question'; is a string
-        correct_answer = value.get('correctAnswer') #is a string
-        incorrect_answers = value.get('incorrectAnswers') #is a list of strings
+        for value in questions: #for every dictionary in the questions list
+            question = value.get('question') #store the value of the key 'question'; is a string
+            session['correct_answer'] = value.get('correctAnswer') #is a string
+            incorrect_answers = value.get('incorrectAnswers') #is a list of strings
+            incorrect_answers.append(session['correct_answer'])
+        print(session['correct_answer'])
 
-    return render_template("trivia.html", question=question, correct=correct_answer, incorrect=incorrect_answers)
+        return render_template("trivia.html", question=question, incorrect=incorrect_answers)
+    else:
+        if session['correct_answer'] == request.form['answer']:
+            return redirect('/trivia')
+        else:
+            return redirect('/')
 
     '''
     collectibles from apis are animal-specific (there is a separate function for each animal type)

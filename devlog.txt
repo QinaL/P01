@@ -66,3 +66,7 @@ yayingLL -- 2021-12-15 23:27
 - fixed wrong password error in login page (qina's observations were a big yes! convert tuple into string, then compare passwords)
 - added gathering of trivia questions from api
 - displayed question, answer, and incorrect answers into trivia.html page
+
+thoamsY -- 2021-12-16 09:13
+- Created profile.html
+- Added if statements and for loops to create the different sections of the page
