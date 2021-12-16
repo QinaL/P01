@@ -1,6 +1,8 @@
 from os import urandom
 from flask import Flask, render_template, request, session, redirect
 import sqlite3, os.path
+from urllib import request
+import json
 
 app = Flask(__name__)
 app.secret_key = urandom(32)
@@ -17,11 +19,12 @@ def home():
     db.close()
     return render_template('home.html')
 
+#login takes the user object and sets cookies
 @app.route("/login",  methods=['GET', 'POST'])
 def login():
     return render_template('login.html')
 
-# authentication of login
+# authentication of login; verifies login information
 @app.route("/auth", methods=['GET', 'POST'])
 def auth():
     if (request.method == 'POST'):
@@ -32,6 +35,9 @@ def auth():
         if (user != None): #user exists
             session['username'] = request.form['username']
             session['password'] = request.form['password']
+        else: #user does not exist: either username doesn't exist or password is wrong
+            return
+
         db.close()
     return redirect('/')
 
@@ -70,7 +76,37 @@ def register():
 
 @app.route("/trivia", methods=['POST', 'GET'])
 def trivia():
-    return redirect('/')
+    #http = request.urlopen("https://api.trivia.willfry.co.uk/questions?limit=20") #HTTP Response object (containing the JSON info); contains 20 questions
+    http = request.urlopen("https://api.trivia.willfry.co.uk/questions?limit=1") #HTTP Response object (containing the JSON info); contains 1 question
+    questions = json.load(http) #questions is a list of dictionaries; each dictionary entry is a question + answers + info
+    print(questions)
+
+    for value in questions: #for every dictionary in the questions list
+        question = value.get('question') #store the value of the key 'question'; is a string
+        correct_answer = value.get('correctAnswer') #is a string
+        incorrect_answers = value.get('incorrectAnswers') #is a list of strings
+
+        print(question)
+    return render_template("trivia.html")
+
+'''
+@app.route("/")
+def rest_demo():
+    http = request.urlopen("https://api.nasa.gov/planetary/apod?api_key=qsb4nvuGri4tJe3q6REknzJbP5xO1OZnJBDfLKMG") #HTTP Response object (containing the JSON info)
+    print(http)
+
+    j = json.load(http) #j is a dictionary (key-value pairs) of the JSON info
+    print(j)
+
+    link = j['url'] #get the value of the 'url' key
+    print(link)
+
+    explanation = j['explanation'] #get the value of the 'explanation' key
+    print(explanation)
+
+    #render an html template with the picture (using url) and explanation
+    return render_template("main.html", pic = link, description = explanation)
+'''
 
 if __name__ == "__main__":
     app.debug = True
