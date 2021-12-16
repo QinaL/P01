@@ -30,7 +30,6 @@ def auth():
 
         username = request.form.get("username")
         password = request.form.get("password")
-        print("~~~~~~~~" + username + "~~~~~~~")
 
         #error handling for empty username
         if username == '':
@@ -46,7 +45,10 @@ def auth():
         else:
             c.execute("SELECT password FROM users WHERE username=? ", (username,))
             # password associated with username in database does not match password inputted
-            if c.fetchone() != password:
+
+            #c.fetchone() returns a tuple with the password
+            #first convert the tuple into the password string only, then compare
+            if ( ''.join(c.fetchone()) ) != password:
                 return render_template("login.html", error="Wrong password")
             # password is correct
             else:
