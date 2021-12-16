@@ -3,6 +3,7 @@ from flask import Flask, render_template, request, session, redirect
 import sqlite3, os.path
 from urllib import request
 import json
+import urllib, json
 
 app = Flask(__name__)
 app.secret_key = urandom(32)
@@ -28,8 +29,17 @@ def login():
 @app.route("/auth", methods=['GET', 'POST'])
 def auth():
     if (request.method == 'POST'):
+
+        username = request.form.get("username")
+        password = request.form.get("password")
+
+        #error handling for empty username
+        if username == '':
+            return render_template("login.html", error="Empty username, who are you?")
+
         db = sqlite3.connect('users.db')
         c = db.cursor()
+
         c.execute("SELECT username AND password FROM users WHERE username=? AND password=?", (request.form['username'], request.form['password']))
         user = c.fetchone()
         if (user != None): #user exists
@@ -38,8 +48,28 @@ def auth():
         else: #user does not exist: either username doesn't exist or password is wrong
             return
 
+
+        c.execute("SELECT username FROM users WHERE username=? ", (username,))
+        # username inputted by user is not found in database
+        if c.fetchone() == None:
+            return render_template("login.html", error="Wrong username, spell correctly or register")
+        # username is found
+        else:
+            c.execute("SELECT password FROM users WHERE username=? ", (username,))
+            # password associated with username in database does not match password inputted
+            passin = c.fetchone()[0];
+            print(passin)
+            if passin != password:
+                return render_template("login.html", error="Wrong password")
+            # password is correct
+            else:
+                session['username'] = request.form['username']
+                session['password'] = request.form['password']
         db.close()
-    return redirect('/')
+        return redirect('/')
+    #get method
+    else:
+        return redirect('/login')
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
@@ -108,6 +138,24 @@ def rest_demo():
     return render_template("main.html", pic = link, description = explanation)
 '''
 
+    #just start
+    if (request.method == 'GET'):
+        question = urllib.request.urlopen("https://api.trivia.willfry.co.uk/questions?limit=5")
+        text = json.load(question)
+        question = text[0]['question']
+        id = text[0]['id']
+        session['correctAnswer'] = text[0]['correctAnswer']
+        wrong = [session['correctAnswer']]
+        for x in text[0]['incorrectAnswers']:
+            wrong.append(x)
+        return render_template("trivia.html", question, id, wrong)
+    else:
+        if request.form['answer'] == session['correctAnswer']:
+            return redirect('/trivia')
+        else:
+            return redirect('/')
+
 if __name__ == "__main__":
     app.debug = True
     app.run()
+    #test

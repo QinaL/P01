@@ -40,4 +40,17 @@
     {{incorrect}}
 
     </body>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <h1>{{question}}</h1>
+    {% for answer in wrong %}
+    <form action="/trivia" method="POST">
+      session['answer'] = answer
+      <input type="submit" value="{{answer}}">
+    </form>
+  </body>
 </html>

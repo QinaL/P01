@@ -43,3 +43,22 @@ qinaL -- 2021-12-13 20:11
 
 yayingLL -- 2021-12-14 16:29
 - added error handling for register page (no username, no password, password don't match, username taken)
+
+qinaL -- 2021-12-14 19:23
+- changed href="home" in navbar to href="/" because the former threw an error
+- /auth get method redirects to /login and not / anymore
+- added login error handling for when username is empty, username is not found in database, or the password is wrong
+
+thomasY -- 2021-12-14 21:01
+- Update from class period: Got a working navbar
+- Added Jinja2 if statement to login and signup
+  - Will only show up if the user is not logged in
+  - Added logout to show up when the user is logged in
+  
+(input class period stuff here)
+
+qinaL -- 2021-12-15
+- login works now (i think?, i hope), wont throw wrong password error when right password 
+    - c.fetchone()[0] because c.fetchone is ('e',) 
+
+
