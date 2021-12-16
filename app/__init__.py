@@ -108,8 +108,25 @@ def trivia():
         correct_answer = value.get('correctAnswer') #is a string
         incorrect_answers = value.get('incorrectAnswers') #is a list of strings
 
-        print(question)
     return render_template("trivia.html", question=question, correct=correct_answer, incorrect=incorrect_answers)
+
+    '''
+    collectibles from apis are animal-specific (there is a separate function for each animal type)
+    because each api gives us information in a different format from each other
+    '''
+
+#for axolotl collectibles
+@app.route("/collectibles", methods=['POST', 'GET'])
+def axolotl():
+    http = urllib.request.urlopen("https://axoltlapi.herokuapp.com/")
+    axolotl_dict = json.load(http) #axolotl_dict is a dictionary; holds key-value pairs
+    print(axolotl_dict)
+
+    pic = axolotl_dict.get("url") #picture of axolotl
+    desc = axolotl_dict.get("facts")
+
+    return render_template("collectibles.html", picture=pic, description=desc)
+
 
 if __name__ == "__main__":
     app.debug = True
