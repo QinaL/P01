@@ -54,11 +54,15 @@ thomasY -- 2021-12-14 21:01
 - Added Jinja2 if statement to login and signup
   - Will only show up if the user is not logged in
   - Added logout to show up when the user is logged in
-  
+
 (input class period stuff here)
 
 qinaL -- 2021-12-15
-- login works now (i think?, i hope), wont throw wrong password error when right password 
-    - c.fetchone()[0] because c.fetchone is ('e',) 
+- login works now (i think?, i hope), wont throw wrong password error when right password
+    - c.fetchone()[0] because c.fetchone is ('e',)
 
-
+yayingLL -- 2021-12-15 23:27
+- fixed bindings error in register page (added , to signify values were tuples)
+- fixed wrong password error in login page (qina's observations were a big yes! convert tuple into string, then compare passwords)
+- added gathering of trivia questions from api
+- displayed question, answer, and incorrect answers into trivia.html page
