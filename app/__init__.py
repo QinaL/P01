@@ -1,7 +1,6 @@
 from os import urandom
 from flask import Flask, render_template, request, session, redirect
 import sqlite3, os.path
-from urllib import request
 import json
 
 app = Flask(__name__)
@@ -31,6 +30,7 @@ def auth():
 
         username = request.form.get("username")
         password = request.form.get("password")
+        print("~~~~~~~~" + username + "~~~~~~~")
 
         #error handling for empty username
         if username == '':
@@ -38,21 +38,20 @@ def auth():
 
         db = sqlite3.connect('users.db')
         c = db.cursor()
-
-        c.execute("SELECT username FROM users WHERE username=? ", (username))
+        c.execute("SELECT username FROM users WHERE username=? ", (username,)) #SYNTAX: ADD , after to refer to entire username, otherwise SQL will count each char as a binding... -_-
         # username inputted by user is not found in database
         if c.fetchone() == None:
             return render_template("login.html", error="Wrong username, double check or register")
         # username is found
         else:
-            c.execute("SELECT password FROM users WHERE username=? ", (username))
+            c.execute("SELECT password FROM users WHERE username=? ", (username,))
             # password associated with username in database does not match password inputted
             if c.fetchone() != password:
                 return render_template("login.html", error="Wrong password")
             # password is correct
             else:
-                session['username'] = request.form['username']
-                session['password'] = request.form['password']
+                session['username'] = username
+                session['password'] = password
         db.close()
         return redirect('/')
 
@@ -78,11 +77,11 @@ def register():
         #look in users.db and see if user with username and password combination exists
         db = sqlite3.connect('users.db')
         c = db.cursor()
-        c.execute("SELECT username AND password FROM users WHERE username=? AND password=?", (request.form['username'], request.form['password']))
+        c.execute("SELECT username AND password FROM users WHERE username=? AND password=?", (username, password))
 
         if (c.fetchone() == None): #user doesn't exist; continue with registration
-            c.execute("INSERT INTO users(username, password) VALUES(?, ?)", (request.form['username'], request.form['password']))
-            table = "CREATE TABLE {name}(Type TEXT, Object TEXT)".format(name=request.form['username'])
+            c.execute("INSERT INTO users(username, password) VALUES(?, ?)", (username, password))
+            table = "CREATE TABLE {name}(Type TEXT, Object TEXT)".format(name=username)
             c.execute(table)
         else: #error: username already taken
             return render_template("register.html", error="Username taken already")
@@ -91,6 +90,7 @@ def register():
         return redirect("/login")
     else:
         return render_template("register.html")
+
 
 
 @app.route("/trivia", methods=['POST', 'GET'])
