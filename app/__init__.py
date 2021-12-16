@@ -2,6 +2,7 @@ from os import urandom
 from flask import Flask, render_template, request, session, redirect
 import sqlite3, os.path
 import json
+import urllib
 
 app = Flask(__name__)
 app.secret_key = urandom(32)
@@ -97,8 +98,8 @@ def register():
 
 @app.route("/trivia", methods=['POST', 'GET'])
 def trivia():
-        #http = request.urlopen("https://api.trivia.willfry.co.uk/questions?limit=20") #HTTP Response object (containing the JSON info); contains 20 questions
-    http = request.urlopen("https://api.trivia.willfry.co.uk/questions?limit=1") #HTTP Response object (containing the JSON info); contains 1 question
+    #http = urllib.request.urlopen("https://api.trivia.willfry.co.uk/questions?limit=20") #HTTP Response object (containing the JSON info); contains 20 questions
+    http = urllib.request.urlopen("https://api.trivia.willfry.co.uk/questions?limit=1") #HTTP Response object (containing the JSON info); contains 1 question
     questions = json.load(http) #questions is a list of dictionaries; each dictionary entry is a question + answers + info
     print(questions)
 
@@ -108,7 +109,7 @@ def trivia():
         incorrect_answers = value.get('incorrectAnswers') #is a list of strings
 
         print(question)
-    return render_template("trivia.html")
+    return render_template("trivia.html", question=question, correct=correct_answer, incorrect=incorrect_answers)
 
 '''
 @app.route("/")
