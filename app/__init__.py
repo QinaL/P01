@@ -3,6 +3,7 @@ from flask import Flask, render_template, request, session, redirect
 import sqlite3, os.path
 import json
 import urllib
+import random
 
 app = Flask(__name__)
 app.secret_key = urandom(32)
@@ -114,6 +115,8 @@ def trivia():
     else:
         if session['correct_answer'] == request.form['answer']:
             return redirect('/trivia')
+            #num =
+            #return redirect('/collectibles')
         else:
             return redirect('/')
 
@@ -123,7 +126,7 @@ def trivia():
     '''
 
 #for axolotl collectibles
-@app.route("/collectibles", methods=['POST', 'GET'])
+@app.route("/axolotl", methods=['POST', 'GET'])
 def axolotl():
     http = urllib.request.urlopen("https://axoltlapi.herokuapp.com/")
     axolotl_dict = json.load(http) #axolotl_dict is a dictionary; holds key-value pairs
@@ -131,6 +134,18 @@ def axolotl():
 
     pic = axolotl_dict.get("url") #picture of axolotl
     desc = axolotl_dict.get("facts")
+
+    return render_template("collectibles.html", picture=pic, description=desc)
+
+#for dog collectibles
+@app.route("/dog", methods=['POST', 'GET'])
+def dog():
+    http = urllib.request.urlopen("https://dog.ceo/api/breeds/image/random")
+    dog_dict = json.load(http) #dog_dict is a dictionary; holds key-value pairs
+    print(dog_dict)
+
+    pic = dog_dict.get("message") #picture of dog
+    desc = "It is forbidden to dog"
 
     return render_template("collectibles.html", picture=pic, description=desc)
 
