@@ -117,11 +117,11 @@ def trivia():
             #return redirect('/trivia')
             num = random.randint(0, 2) #[0,n]; inclusive
             if (num == 0):
-                return redirect('/axolotl')
+                return axolotl()
             elif (num == 1):
-                return redirect('/dog')
+                return dog()
             else:
-                return redirect('/cat')
+                return cat()
         else:
             return redirect('/')
 
@@ -131,7 +131,6 @@ def trivia():
     '''
 
 #for axolotl collectibles
-@app.route("/axolotl", methods=['POST', 'GET'])
 def axolotl():
     http = urllib.request.urlopen("https://axoltlapi.herokuapp.com/")
     axolotl_dict = json.load(http) #axolotl_dict is a dictionary; holds key-value pairs
@@ -143,7 +142,6 @@ def axolotl():
     return render_template("collectibles.html", picture=pic, description=desc)
 
 #for dog collectibles
-@app.route("/dog", methods=['POST', 'GET'])
 def dog():
     http = urllib.request.urlopen("https://dog.ceo/api/breeds/image/random")
     dog_dict = json.load(http) #dog_dict is a dictionary; holds key-value pairs
@@ -155,7 +153,6 @@ def dog():
     return render_template("collectibles.html", picture=pic, description=desc)
 
 #for cat collectibles
-@app.route("/cat", methods=['POST', 'GET'])
 def cat():
     http = urllib.request.urlopen("https://api.thecatapi.com/v1/images/search")
     cat_dict = json.load(http)[0] #cat_dict is a dictionary; holds key-value pairs
