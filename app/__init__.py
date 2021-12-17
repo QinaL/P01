@@ -139,7 +139,7 @@ def axolotl():
     pic = axolotl_dict.get("url") #picture of axolotl
     db = sqlite3.connect('users.db')
     c = db.cursor()
-    c.execute("INSERT INTO '?'(Type, Object, Number) VALUES('Collectible', '?', 1)", (session['username'], pic))
+    c.execute("INSERT INTO {name}(Type, Object, Number) VALUES('Collectible', '?', 1)".format(name=session['username']), (pic,))
     desc = axolotl_dict.get("facts")
 
     return render_template("collectibles.html", picture=pic, description=desc)
@@ -153,7 +153,7 @@ def dog():
     pic = dog_dict.get("message") #picture of dog
     db = sqlite3.connect('users.db')
     c = db.cursor()
-    c.execute("INSERT INTO '?'(Type, Object, Number) VALUES('Collectible', '?', 1)", (session['username'], pic))
+    c.execute("INSERT INTO {name}(Type, Object, Number) VALUES('Collectible', '?', 1)".format(name=session['username']), (pic,))
     desc = "It is forbidden to dog"
     return render_template("collectibles.html", picture=pic, description=desc)
 
@@ -166,7 +166,7 @@ def cat():
     pic = cat_dict.get("url") #picture of cat
     db = sqlite3.connect('users.db')
     c = db.cursor()
-    c.execute("INSERT INTO '?'(Type, Object, Number) VALUES('Collectible', '?', 1)", (session['username'], pic))
+    c.execute("INSERT INTO {name}(Type, Object, Number) VALUES('Collectible', '?', 1)".format(name=session['username']), (pic,))
     desc = "Please do not the cat"
 
     return render_template("collectibles.html", picture=pic, description=desc)
