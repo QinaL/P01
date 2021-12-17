@@ -114,9 +114,14 @@ def trivia():
         return render_template("trivia.html", question=question, incorrect=incorrect_answers)
     else:
         if session['correct_answer'] == request.form['answer']:
-            return redirect('/trivia')
-            #num =
-            #return redirect('/collectibles')
+            #return redirect('/trivia')
+            num = random.randint(0, 2) #[0,n]; inclusive
+            if (num == 0):
+                return redirect('/axolotl')
+            elif (num == 1):
+                return redirect('/dog')
+            else:
+                return redirect('/cat')
         else:
             return redirect('/')
 
@@ -146,6 +151,18 @@ def dog():
 
     pic = dog_dict.get("message") #picture of dog
     desc = "It is forbidden to dog"
+
+    return render_template("collectibles.html", picture=pic, description=desc)
+
+#for cat collectibles
+@app.route("/cat", methods=['POST', 'GET'])
+def cat():
+    http = urllib.request.urlopen("https://api.thecatapi.com/v1/images/search")
+    cat_dict = json.load(http)[0] #cat_dict is a dictionary; holds key-value pairs
+    print(cat_dict)
+
+    pic = cat_dict.get("url") #picture of cat
+    desc = "Please do not the cat"
 
     return render_template("collectibles.html", picture=pic, description=desc)
 

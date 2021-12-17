@@ -70,3 +70,7 @@ yayingLL -- 2021-12-15 23:27
 thoamsY -- 2021-12-16 09:13
 - Created profile.html
 - Added if statements and for loops to create the different sections of the page
+
+yayingLL -- 2021-12-16 22:43
+- added axolotl, dog, and cat api collection of data to Flask
+- created collectibles.html for displaying animal and description
