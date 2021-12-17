@@ -85,7 +85,7 @@ def register():
 
         if (c.fetchone() == None): #user doesn't exist; continue with registration
             c.execute("INSERT INTO users(username, password) VALUES(?, ?)", (username, password))
-            table = "CREATE TABLE {name}(Type TEXT, Object TEXT)".format(name=username)
+            table = "CREATE TABLE {name}(Type TEXT, Object TEXT, Number INT)".format(name=username)
             c.execute(table)
         else: #error: username already taken
             return render_template("register.html", error="Username taken already")
@@ -137,6 +137,9 @@ def axolotl():
     print(axolotl_dict)
 
     pic = axolotl_dict.get("url") #picture of axolotl
+    db = sqlite3.connect('users.db')
+    c = db.cursor()
+    c.execute("INSERT INTO '?'(Type, Object, Number) VALUES('Collectible', '?', 1)", (session['username'], pic))
     desc = axolotl_dict.get("facts")
 
     return render_template("collectibles.html", picture=pic, description=desc)
@@ -148,8 +151,10 @@ def dog():
     print(dog_dict)
 
     pic = dog_dict.get("message") #picture of dog
+    db = sqlite3.connect('users.db')
+    c = db.cursor()
+    c.execute("INSERT INTO '?'(Type, Object, Number) VALUES('Collectible', '?', 1)", (session['username'], pic))
     desc = "It is forbidden to dog"
-
     return render_template("collectibles.html", picture=pic, description=desc)
 
 #for cat collectibles
@@ -159,6 +164,9 @@ def cat():
     print(cat_dict)
 
     pic = cat_dict.get("url") #picture of cat
+    db = sqlite3.connect('users.db')
+    c = db.cursor()
+    c.execute("INSERT INTO '?'(Type, Object, Number) VALUES('Collectible', '?', 1)", (session['username'], pic))
     desc = "Please do not the cat"
 
     return render_template("collectibles.html", picture=pic, description=desc)
