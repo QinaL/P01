@@ -13,16 +13,18 @@ def islogged():
 
 @app.route("/", methods=['GET', 'POST'])
 def home():
-    db = sqlite3.connect("users.db")
-    c = db.cursor()
-    c.execute("CREATE TABLE IF NOT EXISTS users(username TEXT, password TEXT, UNIQUE(username))")
-    db.commit()
-    db.close()
     return render_template('home.html')
 
 #login takes the user object and sets cookies
 @app.route("/login",  methods=['GET', 'POST'])
 def login():
+    #create users table so user can login
+    db = sqlite3.connect("users.db")
+    c = db.cursor()
+    c.execute("CREATE TABLE IF NOT EXISTS users(username TEXT, password TEXT, UNIQUE(username))")
+    db.commit()
+    db.close()
+    
     return render_template('login.html')
 
 # authentication of login; verifies login information
@@ -109,67 +111,90 @@ def trivia():
             session['correct_answer'] = value.get('correctAnswer') #is a string
             incorrect_answers = value.get('incorrectAnswers') #is a list of strings
             incorrect_answers.append(session['correct_answer'])
+        
         print(session['correct_answer'])
+        print(session.get('username'))
 
         return render_template("trivia.html", question=question, incorrect=incorrect_answers)
+    
+    #POST
     else:
-        if session['correct_answer'] == request.form['answer']:
-            #return redirect('/trivia')
-            num = random.randint(0, 2) #[0,n]; inclusive
-            if (num == 0):
-                return axolotl()
-            elif (num == 1):
-                return dog()
-            else:
-                return cat()
+        # randomly choose a collectible
+        num = random.randint(0, 2) #[0,n]; inclusive
+        if (num == 0):
+            collectible = axolotl()
+        elif (num == 1):
+            collectible = dog()
         else:
-            return redirect('/')
+            collectible= cat()
+        '''
+        collectibles from apis are animal-specific (there is a separate function for each animal type)
+        because each api gives us information in a different format from each other
+        
+        collectible is a tuple of (pic, description) given from each function
+        it allows render_template to be in trivia and not in animal-specific functions 
+        so it avoids repeating code of rendering template and inserting data into table 
+        it will also make it easier to incorporate the differing paths of burn or keep collectible and of login or not
+        '''
+        
+        # for testing specific animal function
+        #collectible = cat() #dog() #axolotl()
+        
+        loggedin = session.get('username') != None
+        print(loggedin)
+        
+        if loggedin:
+            db = sqlite3.connect('users.db')
+            c = db.cursor()
+            c.execute("INSERT INTO {name}(Type, Object, Number) VALUES('Collectible', '?', 1)".format(name=session.get('username')), (pic,))
+            db.commit()
+            db.close()
+        
+        if session['correct_answer'] == request.form['answer']:
+            return render_template('collectibles.html', loggedin = loggedin, picture=collectible[0], description = collectible[1])
+        else:
+            return render_template('burn.html', picture=collectible[0], description = collectible[1])
 
     '''
     collectibles from apis are animal-specific (there is a separate function for each animal type)
     because each api gives us information in a different format from each other
     '''
 
-#for axolotl collectibles
+#for axolotl collectibles, returns tuples of pic, description back to trivia
 def axolotl():
     http = urllib.request.urlopen("https://axoltlapi.herokuapp.com/")
     axolotl_dict = json.load(http) #axolotl_dict is a dictionary; holds key-value pairs
     print(axolotl_dict)
-
+    
     pic = axolotl_dict.get("url") #picture of axolotl
-    db = sqlite3.connect('users.db')
-    c = db.cursor()
-    c.execute("INSERT INTO {name}(Type, Object, Number) VALUES('Collectible', '?', 1)".format(name=session['username']), (pic,))
-    desc = axolotl_dict.get("facts")
+    desc = axolotl_dict.get("facts")  
+    collectibleInfo = (pic, desc)
+                            
+    return collectibleInfo
 
-    return render_template("collectibles.html", picture=pic, description=desc)
-
-#for dog collectibles
+#for dog collectibles, returns tuples of pic, description back to trivia
 def dog():
     http = urllib.request.urlopen("https://dog.ceo/api/breeds/image/random")
     dog_dict = json.load(http) #dog_dict is a dictionary; holds key-value pairs
     print(dog_dict)
 
     pic = dog_dict.get("message") #picture of dog
-    db = sqlite3.connect('users.db')
-    c = db.cursor()
-    c.execute("INSERT INTO {name}(Type, Object, Number) VALUES('Collectible', '?', 1)".format(name=session['username']), (pic,))
     desc = "It is forbidden to dog"
-    return render_template("collectibles.html", picture=pic, description=desc)
+    collectibleInfo = (pic, desc)
+  
+    return collectibleInfo
 
-#for cat collectibles
+#for cat collectibles, returns tuples of pic, description back to trivia
 def cat():
     http = urllib.request.urlopen("https://api.thecatapi.com/v1/images/search")
     cat_dict = json.load(http)[0] #cat_dict is a dictionary; holds key-value pairs
     print(cat_dict)
 
     pic = cat_dict.get("url") #picture of cat
-    db = sqlite3.connect('users.db')
-    c = db.cursor()
-    c.execute("INSERT INTO {name}(Type, Object, Number) VALUES('Collectible', '?', 1)".format(name=session['username']), (pic,))
     desc = "Please do not the cat"
-
-    return render_template("collectibles.html", picture=pic, description=desc)
+    collectibleInfo = (pic, desc)
+  
+    return collectibleInfo
 
 
 if __name__ == "__main__":

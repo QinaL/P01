@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %} Burn Baby Burn {% endblock %}
+
+{% block css %} 
+<style>
+    body{
+        background-color: red;
+    }
+</style>
+{% endblock %}
+
+{% block body %} 
+<p>For your idiocy, your collectible burns in fire!</p>
+
+<img src="{{ picture }}">
+{{description}}
+{% endblock %}
