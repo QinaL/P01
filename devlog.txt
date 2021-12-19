@@ -80,3 +80,12 @@ joshuaK -- 2021-12-15
 
 joshuaK -- 2021-12-16
 - fully functional trivia question multiple choice
+
+qinaL -- 2021-12-19 16:14
+- swapped out session['username'] for session.get('username'); idk why or how but the former throws an error in trivia 
+- changed animal-specific fucntions to return a tuple of (pic, desc) rather than rendering template
+    - render_template of collectibles.html is in trivia
+    - inserting collectible data into table is also in trivia
+- added to collectibles.html so when getting a collectible and not logged in, a message of "To keep this collectible, please log in!" in red is given
+- created base.html as the parent template for jinja inheritance (only burn.html extends off it, other templates not converted for jinja inheritance yet)
+- created burn.html for when user gets question wrong and the collectible is burned; only displays collectible and a message saying it's burned, but the style/css leaves much to be desired and the burning effect of image still needs work
