@@ -55,8 +55,6 @@ thomasY -- 2021-12-14 21:01
   - Will only show up if the user is not logged in
   - Added logout to show up when the user is logged in
 
-(input class period stuff here)
-
 qinaL -- 2021-12-15
 - login works now (i think?, i hope), wont throw wrong password error when right password
     - c.fetchone()[0] because c.fetchone is ('e',)
