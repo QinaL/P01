@@ -19,17 +19,17 @@ def home():
 @app.route("/logout",  methods=['GET', 'POST'])
 def logout():
     # try except is for when user is not logged in and does /logout anyways and a KeyError occurs
-    try: 
+    try:
         session.pop('username')
         session.pop('password')
-    except KeyError: 
+    except KeyError:
         return redirect("/")
     return redirect("/")
 
 #login takes the user object and sets cookies
 @app.route("/login",  methods=['GET', 'POST'])
 def login():
-    # stops a loggedin user when they try to log in 
+    # stops a loggedin user when they try to log in
     if islogged():
         return render_template('loggedlock.html')
     #create users table so user can login
@@ -55,7 +55,7 @@ def auth():
         db = sqlite3.connect('users.db')
         c = db.cursor()
         #in case users goes straight to /register w/o running /login code
-        c.execute("CREATE TABLE IF NOT EXISTS users(username TEXT, password TEXT, UNIQUE(username))") 
+        c.execute("CREATE TABLE IF NOT EXISTS users(username TEXT, password TEXT, UNIQUE(username))")
         c.execute("SELECT username FROM users WHERE username=? ", (username,)) #SYNTAX: ADD , after to refer to entire username, otherwise SQL will count each char as a binding... -_-
         # username inputted by user is not found in database
         if c.fetchone() == None:
@@ -117,7 +117,6 @@ def register():
 @app.route("/trivia", methods=['POST', 'GET'])
 def trivia():
     if request.method == 'GET':
-        #http = urllib.request.urlopen("https://api.trivia.willfry.co.uk/questions?limit=20") #HTTP Response object (containing the JSON info); contains 20 questions
         http = urllib.request.urlopen("https://api.trivia.willfry.co.uk/questions?limit=1") #HTTP Response object (containing the JSON info); contains 1 question
         questions = json.load(http) #questions is a list of dictionaries; each dictionary entry is a question + answers + info
 
@@ -126,12 +125,13 @@ def trivia():
             session['correct_answer'] = value.get('correctAnswer') #is a string
             incorrect_answers = value.get('incorrectAnswers') #is a list of strings
             incorrect_answers.append(session['correct_answer'])
-        
+            random.shuffle(incorrect_answers)
+
         print(session['correct_answer'])
         print(islogged())
 
-        return render_template("trivia.html", question=question, incorrect=incorrect_answers)
-    
+        return render_template("trivia.html", question=question, choices=incorrect_answers)
+
     #POST
     else:
         # randomly choose a collectible
@@ -145,28 +145,29 @@ def trivia():
         '''
         collectibles from apis are animal-specific (there is a separate function for each animal type)
         because each api gives us information in a different format from each other
-        
+
         collectible is a tuple of (pic, description) given from each function
-        it allows render_template to be in trivia and not in animal-specific functions 
-        so it avoids repeating code of rendering template and inserting data into table 
+        it allows render_template to be in trivia and not in animal-specific functions
+        so it avoids repeating code of rendering template and inserting data into table
         it will also make it easier to incorporate the differing paths of burn or keep collectible and of login or not
         '''
-        
-        # for testing specific animal function
-        #collectible = cat() #dog() #axolotl()
-        
-        loggedin = islogged()
-        print(session.get('username'))
-        
-        # if user is logged in, collectible info gets added to their database
-        if loggedin:
-            db = sqlite3.connect('users.db')
-            c = db.cursor()
-            c.execute("INSERT INTO {name}(Type, Object, Number) VALUES('Collectible', ?, 1)".format(name=session.get('username')), (collectible[0],))
-            db.commit()
-            db.close()
-        
+
         if session['correct_answer'] == request.form['answer']:
+            # for testing specific animal function
+            #collectible = cat() #dog() #axolotl()
+
+            loggedin = islogged()
+            print(loggedin)
+            #print(session.get('username'))
+
+            # if user is logged in, collectible info gets added to their database
+            if loggedin:
+                db = sqlite3.connect('users.db')
+                c = db.cursor()
+                c.execute("INSERT INTO {name}(Type, Object, Number) VALUES('Collectible', ?, 1)".format(name=session.get('username')), (collectible[0],))
+                db.commit()
+                db.close()
+
             return render_template('collectibles.html', loggedin = loggedin, picture=collectible[0], description = collectible[1])
         else:
             return render_template('burn.html', picture=collectible[0], description = collectible[1])
@@ -180,36 +181,33 @@ def trivia():
 def axolotl():
     http = urllib.request.urlopen("https://axoltlapi.herokuapp.com/")
     axolotl_dict = json.load(http) #axolotl_dict is a dictionary; holds key-value pairs
-    print(axolotl_dict)
-    
+
     pic = axolotl_dict.get("url") #picture of axolotl
-    desc = axolotl_dict.get("facts")  
+    desc = axolotl_dict.get("facts")
     collectibleInfo = (pic, desc)
-                            
+
     return collectibleInfo
 
 #for dog collectibles, returns tuples of pic, description back to trivia
 def dog():
     http = urllib.request.urlopen("https://dog.ceo/api/breeds/image/random")
     dog_dict = json.load(http) #dog_dict is a dictionary; holds key-value pairs
-    print(dog_dict)
 
     pic = dog_dict.get("message") #picture of dog
     desc = "It is forbidden to dog"
     collectibleInfo = (pic, desc)
-  
+
     return collectibleInfo
 
 #for cat collectibles, returns tuples of pic, description back to trivia
 def cat():
     http = urllib.request.urlopen("https://api.thecatapi.com/v1/images/search")
     cat_dict = json.load(http)[0] #cat_dict is a dictionary; holds key-value pairs
-    print(cat_dict)
 
     pic = cat_dict.get("url") #picture of cat
     desc = "Please do not the cat"
     collectibleInfo = (pic, desc)
-  
+
     return collectibleInfo
 
 

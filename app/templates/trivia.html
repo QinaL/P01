@@ -43,7 +43,7 @@
       </nav>
 
     {{question}}
-    {% for i in incorrect %}
+    {% for i in choices %}
     <form action="/trivia" method="POST">
       <input value="{{i}}" type="hidden" name="answer">
       <input type="submit" value="{{i}}">

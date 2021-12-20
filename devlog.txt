@@ -80,7 +80,7 @@ joshuaK -- 2021-12-16
 - fully functional trivia question multiple choice
 
 qinaL -- 2021-12-19 16:14
-- swapped out session['username'] for session.get('username'); idk why or how but the former throws an error in trivia 
+- swapped out session['username'] for session.get('username'); idk why or how but the former throws an error in trivia
 - changed animal-specific fucntions to return a tuple of (pic, desc) rather than rendering template
     - render_template of collectibles.html is in trivia
     - inserting collectible data into table is also in trivia
@@ -91,13 +91,20 @@ qinaL -- 2021-12-19 16:14
     - when answer is wrong, this template is rendered instead of redirecting to home page
 
 qinaL -- 2021-12-19 20:19
-- moved creation of users database from "/" to "/login" 
+- moved creation of users database from "/" to "/login"
 - added CREATE TABLE IF NOT EXISTS to "/register" for users.db in case users goes directly to "/register" and skipped table creation in "/login"
 - added some <br> to collectibles.html and burn.html so formatting of page looks nicer
-- tested to see if code for adding collectible when logged in works, fixed some errors I found, (hopefully) works now but there should probably be more testing 
+- tested to see if code for adding collectible when logged in works, fixed some errors I found, (hopefully) works now but there should probably be more testing
 - added "/logout" so users can now logout
 - got rid of login button on the home page (it looked bad), log in + log out will be allocated only to navbar
 - added an catch for when logged in users try to login; loggedlock.html (uses jinja inheritance) is rendered instead
 - found error: if user does trivia, navbar will show logout even if not logged in because session has correct_answer and navbar checks for if session is empty to determine if it's logged in or not
     - fixed error by changing {% if session %} to {% if session['username'] %}
     - fixed only in trivia.html and base.html; too tired to copy paste it into the other templates
+
+yayingLL -- 2021
+- moved inserting collectible to the person's database ONLY if they got the correct answer
+- deleted previous db file because it didn't include Number column
+  - all users registered from now on have a Number column
+- randomized presentation of answers in trivia questions
+  - previously, correct answer would always be the last choice
