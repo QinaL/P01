@@ -41,14 +41,17 @@
             </div>
         </div>
       </nav>
-
-        Collectible Gained!
-        {% if loggedin == False %}
-          <p style="color: red">**To keep this collectible, please <a href="/login"> log in!</a> </p>
-        {% endif %}   
+          Collectible Gained!
+          <br>
+          {% if loggedin == False %}
+            <p style="color: red">**To keep this collectible, please <a href="/login"> log in!</a> </p>
+          {% endif %}   
           
-        <img src="{{ picture }}">
-        {{description}}
+          <img src="{{ picture }}">
+          <br>
+          {{description}}
+          <br><br>
+          <a role="button" href= "/trivia"class="btn btn-secondary">More Trivia</a>
 
     </body>
 </html>

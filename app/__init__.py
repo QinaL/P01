@@ -13,18 +13,31 @@ def islogged():
 
 @app.route("/", methods=['GET', 'POST'])
 def home():
+    print(session)
     return render_template('home.html')
+
+@app.route("/logout",  methods=['GET', 'POST'])
+def logout():
+    # try except is for when user is not logged in and does /logout anyways and a KeyError occurs
+    try: 
+        session.pop('username')
+        session.pop('password')
+    except KeyError: 
+        return redirect("/")
+    return redirect("/")
 
 #login takes the user object and sets cookies
 @app.route("/login",  methods=['GET', 'POST'])
 def login():
+    # stops a loggedin user when they try to log in 
+    if islogged():
+        return render_template('loggedlock.html')
     #create users table so user can login
     db = sqlite3.connect("users.db")
     c = db.cursor()
     c.execute("CREATE TABLE IF NOT EXISTS users(username TEXT, password TEXT, UNIQUE(username))")
     db.commit()
     db.close()
-    
     return render_template('login.html')
 
 # authentication of login; verifies login information
@@ -41,6 +54,8 @@ def auth():
 
         db = sqlite3.connect('users.db')
         c = db.cursor()
+        #in case users goes straight to /register w/o running /login code
+        c.execute("CREATE TABLE IF NOT EXISTS users(username TEXT, password TEXT, UNIQUE(username))") 
         c.execute("SELECT username FROM users WHERE username=? ", (username,)) #SYNTAX: ADD , after to refer to entire username, otherwise SQL will count each char as a binding... -_-
         # username inputted by user is not found in database
         if c.fetchone() == None:
@@ -58,6 +73,7 @@ def auth():
             else:
                 session['username'] = username
                 session['password'] = password
+                print(session['username'])
         db.close()
         return redirect('/')
 
@@ -98,7 +114,6 @@ def register():
         return render_template("register.html")
 
 
-
 @app.route("/trivia", methods=['POST', 'GET'])
 def trivia():
     if request.method == 'GET':
@@ -113,7 +128,7 @@ def trivia():
             incorrect_answers.append(session['correct_answer'])
         
         print(session['correct_answer'])
-        print(session.get('username'))
+        print(islogged())
 
         return render_template("trivia.html", question=question, incorrect=incorrect_answers)
     
@@ -140,13 +155,14 @@ def trivia():
         # for testing specific animal function
         #collectible = cat() #dog() #axolotl()
         
-        loggedin = session.get('username') != None
-        print(loggedin)
+        loggedin = islogged()
+        print(session.get('username'))
         
+        # if user is logged in, collectible info gets added to their database
         if loggedin:
             db = sqlite3.connect('users.db')
             c = db.cursor()
-            c.execute("INSERT INTO {name}(Type, Object, Number) VALUES('Collectible', '?', 1)".format(name=session.get('username')), (pic,))
+            c.execute("INSERT INTO {name}(Type, Object, Number) VALUES('Collectible', ?, 1)".format(name=session.get('username')), (collectible[0],))
             db.commit()
             db.close()
         
