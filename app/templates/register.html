@@ -1,55 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <title> Register </title>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+{% extends "base.html" %}
+{% block title %} Register {% endblock %}
 
-        <link rel="stylesheet"
-              type="text/css"
-              href="../static/css/style.css">
+{% block css %}
+<style>
+    /* insert css specific to individual page */
+</style>
+{% endblock %}
 
-    </head>
-    <body>
-      <nav class="navbar navbar-expand fixed-top navbar-light bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/">ThingsOnFire</a>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-              <ul class="navbar-nav">
-                <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="/">Home</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="/trivia">Trivia</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="/profile">Profile</a>
-                </li>
-                {% if session %}
-                <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="/logout">Logout</a>
-                </li>
-                {% else %}
-                <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="/login">Login</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="/register">Signup</a>
-                </li>
-                {% endif %}
-            </div>
-        </div>
-      </nav>
+{% block body %}
+    Register
+    <form action="/register", method="POST">
+      <input class="credential-input" type="text" name="username" placeholder="Username"><br>
+      <input class="credential-input" type="password" name="password" placeholder="Password"><br>
+      <input class="credential-input" type="password" name="reenterpasswd" placeholder="Re-enter password"><br>
+      <input id="credential-submit" type="submit" value="Register" />
+    </form>
 
-          Register
-          <form action="/register", method="POST">
-              <input class="credential-input" type="text" name="username" placeholder="Username"><br>
-              <input class="credential-input" type="password" name="password" placeholder="Password"><br>
-              <input class="credential-input" type="password" name="reenterpasswd" placeholder="Re-enter password"><br>
-              <input id="credential-submit" type="submit" value="Register" />
-          </form>
-
-          {{error}}
-    </body>
-</html>
+    {{error}}
+{% endblock %}
