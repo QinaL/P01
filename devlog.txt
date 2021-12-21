@@ -119,3 +119,6 @@ qinaL -- 2021-12-20 20:06
 
 yayingLL -- 2021-12-20 23:39
 - started on hints -- relationships are so complex
+
+joshuaL -- 2021-12-21 9:15
+- made it so if logged out and than log in the collectible is saved

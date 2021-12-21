@@ -13,6 +13,13 @@ def islogged():
 
 @app.route("/", methods=['GET', 'POST'])
 def home():
+    if 'collectible' in session.keys():
+        db = sqlite3.connect("users.db")
+        c = db.cursor()
+        c.execute("INSERT INTO {name}(Type, Object, Number) VALUES('Collectible', ?, 1)".format(name=session.get('username')), (session['collectible'],))
+        session.pop('collectible')
+        db.commit()
+        db.close()
     print(session)
     return render_template('home.html')
 
@@ -187,7 +194,8 @@ def trivia():
                 c.execute("INSERT INTO {name}(Type, Object, Number) VALUES('Collectible', ?, 1)".format(name=session.get('username')), (collectible[0],))
                 db.commit()
                 db.close()
-
+                return render_template('collectibles.html', loggedin = loggedin, picture=collectible[0], description = collectible[1])
+            session['collectible'] = collectible[0]
             return render_template('collectibles.html', loggedin = loggedin, picture=collectible[0], description = collectible[1])
         else:
             return render_template('burn.html', picture=collectible[0], description = collectible[1])
