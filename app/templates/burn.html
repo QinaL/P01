@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block title %} Burn Baby Burn {% endblock %}
 
-{% block css %} 
+{% block css %}
 <style>
     body{
         background-color: red;
@@ -9,7 +9,8 @@
 </style>
 {% endblock %}
 
-{% block body %} 
+{% block body %}
+<p>The correct answer is {{session['correct_answer']}}</p>
 <p>For your idiocy, your collectible burns in fire!</p>
 
   <div class="container-fluid" style="height:500px">
