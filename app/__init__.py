@@ -151,11 +151,16 @@ def trivia():
         so it avoids repeating code of rendering template and inserting data into table
         it will also make it easier to incorporate the differing paths of burn or keep collectible and of login or not
         '''
+        
+        # for testing specific animal function
+        # collectible = dog() #cat() #axolotl()
 
+        # when api fails
+        if collectible == "Error":
+            return render_template('error.html')
+        
         if session['correct_answer'] == request.form['answer']:
-            # for testing specific animal function
-            #collectible = cat() #dog() #axolotl()
-
+            
             loggedin = islogged()
             print(loggedin)
             #print(session.get('username'))
@@ -179,8 +184,12 @@ def trivia():
 
 #for axolotl collectibles, returns tuples of pic, description back to trivia
 def axolotl():
-    http = urllib.request.urlopen("https://axoltlapi.herokuapp.com/")
-    axolotl_dict = json.load(http) #axolotl_dict is a dictionary; holds key-value pairs
+    # in case api fails
+    try:
+        http = urllib.request.urlopen("https://axoltlapi.herokuapp.com/")
+        axolotl_dict = json.load(http) #axolotl_dict is a dictionary; holds key-value pairs
+    except:
+        return "Error"
 
     pic = axolotl_dict.get("url") #picture of axolotl
     desc = axolotl_dict.get("facts")
@@ -190,9 +199,12 @@ def axolotl():
 
 #for dog collectibles, returns tuples of pic, description back to trivia
 def dog():
-    http = urllib.request.urlopen("https://dog.ceo/api/breeds/image/random")
-    dog_dict = json.load(http) #dog_dict is a dictionary; holds key-value pairs
-
+    try:
+        http = urllib.request.urlopen("https://dog.ceo/api/breeds/image/random")
+        dog_dict = json.load(http) #dog_dict is a dictionary; holds key-value pairs
+    except: 
+        return "Error"
+    
     pic = dog_dict.get("message") #picture of dog
     desc = "It is forbidden to dog"
     collectibleInfo = (pic, desc)
@@ -201,9 +213,12 @@ def dog():
 
 #for cat collectibles, returns tuples of pic, description back to trivia
 def cat():
-    http = urllib.request.urlopen("https://api.thecatapi.com/v1/images/search")
-    cat_dict = json.load(http)[0] #cat_dict is a dictionary; holds key-value pairs
-
+    try: 
+        http = urllib.request.urlopen("https://api.thecatapi.com/v1/images/search")
+        cat_dict = json.load(http)[0] #cat_dict is a dictionary; holds key-value pairs
+    except:
+        return "Error"
+    
     pic = cat_dict.get("url") #picture of cat
     desc = "Please do not the cat"
     collectibleInfo = (pic, desc)
