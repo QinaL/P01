@@ -108,3 +108,10 @@ yayingLL -- 2021
   - all users registered from now on have a Number column
 - randomized presentation of answers in trivia questions
   - previously, correct answer would always be the last choice
+  
+qinaL -- 2021-12-20 20:06
+- added try except blocks in the code that gets api info; if api fails, animal-specific functions returns "Error," which trivia catches for and renders error.html to tell user that the site is currently down
+    - THOU SHALT NOT FAIL
+    - error.html was created 
+    
+
