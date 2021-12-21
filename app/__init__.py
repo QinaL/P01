@@ -99,12 +99,18 @@ def register():
         #look in users.db and see if user with username and password combination exists
         db = sqlite3.connect('users.db')
         c = db.cursor()
+        c.execute("CREATE TABLE IF NOT EXISTS users(username TEXT, password TEXT, UNIQUE(username))")
         c.execute("SELECT username AND password FROM users WHERE username=? AND password=?", (username, password))
 
         if (c.fetchone() == None): #user doesn't exist; continue with registration
             c.execute("INSERT INTO users(username, password) VALUES(?, ?)", (username, password))
             table = "CREATE TABLE {name}(Type TEXT, Object TEXT, Number INT)".format(name=username)
             c.execute(table)
+
+            #preload hints and fire extinguishers in each user; default 2 each
+            #FIX UP SO INCLUDES ? ? ?
+            c.execute("INSERT INTO {name}(Type, Object, Number) VALUES('item', 'hint', 2)".format(name=username))
+
         else: #error: username already taken
             return render_template("register.html", error="Username taken already")
         db.commit()
@@ -129,9 +135,18 @@ def trivia():
 
         print(session['correct_answer'])
         print(islogged())
-
         return render_template("trivia.html", question=question, choices=incorrect_answers)
 
+        '''
+                username = request.form.get("username")
+
+                db = sqlite3.connect('users.db')
+                c = db.cursor()
+                #c.execute("SELECT Number FROM {name} WHERE Object=?",("Hint",).format(name=username))
+                hint = c.fetchone()
+                print(hint)
+                return render_template("trivia.html", question=question, choices=incorrect_answers, hints=hint)
+        '''
     #POST
     else:
         # randomly choose a collectible
@@ -151,16 +166,16 @@ def trivia():
         so it avoids repeating code of rendering template and inserting data into table
         it will also make it easier to incorporate the differing paths of burn or keep collectible and of login or not
         '''
-        
+
         # for testing specific animal function
         # collectible = dog() #cat() #axolotl()
 
         # when api fails
         if collectible == "Error":
             return render_template('error.html')
-        
+
         if session['correct_answer'] == request.form['answer']:
-            
+
             loggedin = islogged()
             print(loggedin)
             #print(session.get('username'))
@@ -202,9 +217,9 @@ def dog():
     try:
         http = urllib.request.urlopen("https://dog.ceo/api/breeds/image/random")
         dog_dict = json.load(http) #dog_dict is a dictionary; holds key-value pairs
-    except: 
+    except:
         return "Error"
-    
+
     pic = dog_dict.get("message") #picture of dog
     desc = "It is forbidden to dog"
     collectibleInfo = (pic, desc)
@@ -213,12 +228,12 @@ def dog():
 
 #for cat collectibles, returns tuples of pic, description back to trivia
 def cat():
-    try: 
+    try:
         http = urllib.request.urlopen("https://api.thecatapi.com/v1/images/search")
         cat_dict = json.load(http)[0] #cat_dict is a dictionary; holds key-value pairs
     except:
         return "Error"
-    
+
     pic = cat_dict.get("url") #picture of cat
     desc = "Please do not the cat"
     collectibleInfo = (pic, desc)

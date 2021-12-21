@@ -102,16 +102,20 @@ qinaL -- 2021-12-19 20:19
     - fixed error by changing {% if session %} to {% if session['username'] %}
     - fixed only in trivia.html and base.html; too tired to copy paste it into the other templates
 
-yayingLL -- 2021
+yayingLL -- 2021-12-19 21:00
 - moved inserting collectible to the person's database ONLY if they got the correct answer
 - deleted previous db file because it didn't include Number column
   - all users registered from now on have a Number column
 - randomized presentation of answers in trivia questions
   - previously, correct answer would always be the last choice
-  
+
+yayingLL -- 2021-12-20 9:23
+- incorporated jinja inheritance with base.html for most pages
+
 qinaL -- 2021-12-20 20:06
 - added try except blocks in the code that gets api info; if api fails, animal-specific functions returns "Error," which trivia catches for and renders error.html to tell user that the site is currently down
     - THOU SHALT NOT FAIL
-    - error.html was created 
-    
+    - error.html was created
 
+yayingLL -- 2021-12-20 23:39
+- started on hints -- relationships are so complex
