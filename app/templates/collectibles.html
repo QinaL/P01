@@ -4,14 +4,14 @@
 {% block css %}
 <style>
   body{
-    background-color: seagreen;
+    background-color: #26A671;
   }
 </style>
 {% endblock %}
 
 {% block body %}
   Collectible Gained!
-  <br>
+  <br><br>
   {% if loggedin == False %}
     <p style="color: red">**To keep this collectible, please <a href="/login"> log in!</a> </p>
   {% endif %}

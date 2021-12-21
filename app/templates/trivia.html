@@ -9,7 +9,7 @@
 
 {% block body %}
   {{question}} <!-- displays questions -->
-
+  <br><br>
   {% for i in choices %} <!-- displays choices -->
     <form action="/trivia" method="POST">
       <input value="{{i}}" type="hidden" name="answer">
