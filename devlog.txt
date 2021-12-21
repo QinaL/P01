@@ -126,3 +126,7 @@ thomasY -- 2021-12-21 09:07
 
 joshuaL -- 2021-12-21 9:15
 - made it so if logged out and than log in the collectible is saved
+
+qinaL -- 2021-12-21 18:18
+- there was an issue with the implementation of logged out but logging in the save collectible, throws an error when you go back to home w/o saving collectibe; fixed error
+- changed style of site a bit
