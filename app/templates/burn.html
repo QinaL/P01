@@ -12,9 +12,11 @@
 {% block body %} 
 <p>For your idiocy, your collectible burns in fire!</p>
 
-<img src="{{ picture }}">
-<br>
-{{description}}
-<br><br>
-<a role="button" href= "/trivia"class="btn btn-secondary">More Trivia</a>
+  <div class="container-fluid" style="height:500px">
+    <img src="{{ picture }}" class="img-fluid mh-100">
+    <br>
+    {{description}}
+    <br><br>
+    <a role="button" href= "/trivia"class="btn btn-secondary">More Trivia</a>
+  </div>
 {% endblock %}
