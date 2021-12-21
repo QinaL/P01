@@ -119,3 +119,7 @@ qinaL -- 2021-12-20 20:06
 
 yayingLL -- 2021-12-20 23:39
 - started on hints -- relationships are so complex
+
+thomasY -- 2021-12-21 09:07
+- Updated collectibles and burn so the image has a max height
+- Images now resize alongside the browser window
