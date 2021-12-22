@@ -13,7 +13,8 @@ def islogged():
 
 @app.route("/", methods=['GET', 'POST'])
 def home():
-    if 'collectible' in session.keys() and not islogged:
+    # when logged out user answers qu right, collectibe is added to session; then when they log in, collectible in session is added to table
+    if 'collectible' in session.keys() and islogged:
         insertCollectible()
     print(session)
     return render_template('home.html')
