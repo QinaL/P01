@@ -203,6 +203,11 @@ def axolotl():
     try:
         http = urllib.request.urlopen("https://axoltlapi.herokuapp.com/")
         axolotl_dict = json.load(http) #axolotl_dict is a dictionary; holds key-value pairs
+        print(axolotl_dict['url'])
+        while "i.imgur" in axolotl_dict['url']:
+            print("cringe imgur cleansed")
+            http = urllib.request.urlopen("https://axoltlapi.herokuapp.com/")
+            axolotl_dict = json.load(http)
     except:
         return "Error"
 
@@ -240,7 +245,7 @@ def cat():
 
     return collectibleInfo
 
-# inserts collectible into user's table 
+# inserts collectible into user's table
 def insertCollectible():
     db = sqlite3.connect("users.db")
     c = db.cursor()
@@ -248,7 +253,7 @@ def insertCollectible():
     session.pop('collectible')
     db.commit()
     db.close()
-    
+
 if __name__ == "__main__":
     app.debug = True
     app.run()
