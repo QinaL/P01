@@ -141,3 +141,11 @@ thomasY -- 2021-12-22 23:32
 - Created route /profile
 - Implemented a basic profile page that displays the users collectibles when logged in
 
+qinaL -- 2021-12-23 13:57
+- trivia api 1 (opentdb) kept throwing an error; the info given from api was processed wrong (the dict given was confusing); I fixeds it so it works now
+
+qinaL -- 2021-12-23 14:14
+- added some more comments to /trivia so code is easier to read; cleaned up some extraneous code; fixed other errors found
+    - hopefully code looks nicer now 
+    - api 0 and 1 should work fine now
+    - api 2 has an issue where you must inputted exactly as correct answer so if correct answer was "<i>Lonesome Dove</i>" Lonesome Dove was wrong
