@@ -133,3 +133,7 @@ qinaL -- 2021-12-21 18:18
 
 qinaL -- 2021-12-22 9:24
 - added a fire image to burn; it's a bit clunky, will fix soon
+
+thomasY -- 2021-12-22 23:32
+- Created route /profile
+- Implemented a basic profile page that displays the users collectibles when logged in
