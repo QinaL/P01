@@ -126,38 +126,61 @@ def register():
 @app.route("/trivia", methods=['POST', 'GET'])
 def trivia():
     if request.method == 'GET':
-        num = 1#random.randint(0, 2)
+        
+        #randomize what trivia api to use 
+        num = 2#random.randint(0, 2)
+        
+        #trivia api 0
         if (num == 0):
+            #gets info from api
             http = urllib.request.urlopen("https://api.trivia.willfry.co.uk/questions?limit=1") #HTTP Response object (containing the JSON info); contains 1 question
             questions = json.load(http) #questions is a list of dictionaries; each dictionary entry is a question + answers + info
+            
+            #processes info 
             print(questions)
             for value in questions: #for every dictionary in the questions list
                 question = value.get('question') #store the value of the key 'question'; is a string
                 session['correct_answer'] = value.get('correctAnswer') #is a string
                 incorrect_answers = value.get('incorrectAnswers') #is a list of strings
-                incorrect_answers.append(session['correct_answer'])
+            #add correct answer so incorrect_answer has all possible answer choices
+            incorrect_answers.append(session['correct_answer'])
+            #randomize order answer choices appear
             random.shuffle(incorrect_answers)
+            
+            print(session['correct_answer'])
+            print(islogged())
+            
+            return render_template("trivia.html", question=question, choices=incorrect_answers)
+        
+        #trivia api 1
         elif (num == 1):
+            #gets info from api
             http = urllib.request.urlopen("https://opentdb.com/api.php?amount=1&difficulty=hard")
             questions = json.load(http)
-            
             '''
-            what the api gives is vv complicated compared to previous api, also the key name for this api was the variable name of the last                 api so it gets confusing, but point is this api is processed in diff format than last one
+            what the api gives is vv complicated compared to previous api, also the key name for this api was the variable name of the last                 api so this api is processed in diff format than last one
             '''
+            #for debugging
             print(questions)
             print(questions['results'][0])
             
+            #processes info 
             session['correct_answer'] = questions['results'][0]['correct_answer']
             question= questions['results'][0]['question'] 
             incorrectAnswers = [] #list for containing all the other answer choices
             for value in questions['results'][0]['incorrect_answers']: 
                 incorrectAnswers.append(value)
+            #add correct answer so incorrectAnswer has all possible answer choices
+            incorrectAnswers.append(session['correct_answer'])
+            #randomize order answer choices appear
             random.shuffle(incorrectAnswers)
 
             print(session['correct_answer'])
             print(islogged())
             
             return render_template("trivia.html", question=question, choices=incorrectAnswers)
+        
+        #trivia api 2
         else:
             http = urllib.request.urlopen("https://jservice.io/api/random")
             questions = json.load(http)
@@ -165,20 +188,7 @@ def trivia():
             print(session['correct_answer'])
             return render_template("triviasa.html", question=questions[0]['question'])
         
-        
-        questions = json.load(http) #questions is a list of dictionaries; each dictionary entry is a question + answers + info
-        print(questions)
-        for value in questions: #for every dictionary in the questions list
-            question = value.get('question') #store the value of the key 'question'; is a string
-            session['correct_answer'] = value.get('correctAnswer') #is a string
-            incorrect_answers = value.get('incorrectAnswers') #is a list of strings
-            incorrect_answers.append(session['correct_answer'])
-            random.shuffle(incorrect_answers)
-
-        print(session['correct_answer'])
-        print(islogged())
-        return render_template("trivia.html", question=question, choices=incorrect_answers)
-
+       
         '''
                 username = request.form.get("username")
 
