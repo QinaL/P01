@@ -126,9 +126,30 @@ def register():
 @app.route("/trivia", methods=['POST', 'GET'])
 def trivia():
     if request.method == 'GET':
-        http = urllib.request.urlopen("https://api.trivia.willfry.co.uk/questions?limit=1") #HTTP Response object (containing the JSON info); contains 1 question
-        questions = json.load(http) #questions is a list of dictionaries; each dictionary entry is a question + answers + info
+        num = 1#random.randint(0, 2)
+        if (num == 0):
+            http = urllib.request.urlopen("https://api.trivia.willfry.co.uk/questions?limit=1") #HTTP Response object (containing the JSON info); contains 1 question
+        elif (num == 1):
+            http = urllib.request.urlopen("https://opentdb.com/api.php?amount=1&difficulty=hard")
+            questions = json.load(http)
+            session['correct_answer'] = questions['results'][0]['correct_answer']
+            for value in questions['results']: #for every dictionary in the questions list
+                question = value.get('question') #store the value of the key 'question'; is a string
+                incorrect_answers = value.get('incorrectAnswers') #is a list of strings
+                incorrect_answers.append(session['correct_answer'])
+                random.shuffle(incorrect_answers)
 
+            print(session['correct_answer'])
+            print(islogged())
+            return render_template("trivia.html", question=question, choices=incorrect_answers)
+        else:
+            http = urllib.request.urlopen("https://jservice.io/api/random")
+            questions = json.load(http)
+            session['correct_answer'] = questions[0]['answer']
+            print(session['correct_answer'])
+            return render_template("triviasa.html", question=questions[0]['question'])
+        questions = json.load(http) #questions is a list of dictionaries; each dictionary entry is a question + answers + info
+        print(questions)
         for value in questions: #for every dictionary in the questions list
             question = value.get('question') #store the value of the key 'question'; is a string
             session['correct_answer'] = value.get('correctAnswer') #is a string

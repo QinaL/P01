@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %} Trivia {% endblock %}
+
+{% block css %}
+<style>
+    /* insert css specific to individual page */
+</style>
+{% endblock %}
+
+{% block body %}
+  {{question}} <!-- displays questions -->
+  <br><br>
+    <form action="/trivia" method="POST">
+      <input name="answer">
+      <input type="submit" value="submit">
+    </form>
+
+{% endblock %}
