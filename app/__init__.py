@@ -248,6 +248,26 @@ def insertCollectible():
     session.pop('collectible')
     db.commit()
     db.close()
+
+@app.route("/profile", methods=['POST', 'GET'])
+def profile():
+   try:
+        username = session['username']
+   except:
+        return render_template('profile.html', loggedIn=False)
+   collectibles = []
+   db = sqlite3.connect('users.db')
+   c = db.cursor()
+   c.execute("SELECT Object FROM {name} WHERE Type='Collectible'".format(name=username))
+   collectibles=c.fetchall()
+   i=0
+   while (i < len(collectibles)):
+        collectibles[i]=collectibles[i][0]
+        i+=1
+   db.commit()
+   db.close()
+   print(collectibles)
+   return render_template('profile.html', loggedIn=True, collection=collectibles)
     
 if __name__ == "__main__":
     app.debug = True

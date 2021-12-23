@@ -9,11 +9,17 @@
 
 {% block body %}
 
-  {% if session %}
+  {% if loggedIn %}
     <h1>Collectibles</h1>
-    {% for collectible in collection %}
-      <img src="{{collectible}}">
-    {% endfor %}
+    <div class="container">
+      <div class="row row-cols-auto">
+        {% for collectible in collection %}
+        <div class="col">
+          <img src="{{collectible}}" class="img-fluid" style="height:150px">
+        </div>
+        {% endfor %}
+      </div>
+    </div>
     <br>
     <h1>Achievements</h1>
     {% for achieve in achievements %}
