@@ -131,6 +131,8 @@ qinaL -- 2021-12-21 18:18
 - there was an issue with the implementation of logged out but logging in the save collectible, throws an error when you go back to home w/o saving collectibe; fixed error
 - changed style of site a bit
 
+joshuaK -- 2021-12-22 9:15
+- made it so imgur are cleansed cause security issue does not allow us to display them very sad
 
 qinaL -- 2021-12-22 9:24
 - added a fire image to burn; it's a bit clunky, will fix soon
