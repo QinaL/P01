@@ -6,6 +6,12 @@
     body{
         background-color: #CF1259;
     }
+    .fire{
+    	background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4CBdeXDr9QvjaazFSeVYVK9Vnd8Ej2ntrM5Zn6Ok2YYsWk2mqgUkcL6nMS62uADNl7J8&usqp=CAU");
+    	background-repeat: no-repeat;
+    	background-position: center;
+    	background-size: cover;
+    }
 </style>
 {% endblock %}
 
@@ -13,11 +19,13 @@
 <p>The correct answer is {{session['correct_answer']}}</p>
 <p>For your idiocy, your collectible burns in fire!</p>
 
+<div class="fire">
   <div class="container-fluid" style="height:500px">
     <img src="{{ picture }}" class="img-fluid mh-100">
     <br>
     {{description}}
     <br><br>
     <a role="button" href= "/trivia"class="btn btn-secondary">More Trivia</a>
+  </div>
   </div>
 {% endblock %}
