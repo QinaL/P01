@@ -16,16 +16,28 @@
 {% endblock %}
 
 {% block body %}
-<p>The correct answer is {{session['correct_answer']}}</p>
+<p>The correct answer was {{session['correct_answer']}}</p>
 <p>For your idiocy, your collectible burns in fire!</p>
 
+<div class="card">
+    <img class="card-img-top" src="https://wpcdn.us-east-1.vip.tn-cloud.net/www.abc6.com/content/uploads/2020/05/flames.jpg">
+    <div class="card-body">
+        <p class="card-text"> stuff </p>
+        <img class="card-img-top" src="{{ picture }}">
+    </div>
+</div>
+
+
+<!--
 <div class="fire">
   <div class="container-fluid" style="height:500px">
     <img src="{{ picture }}" class="img-fluid mh-100">
-    <br>
+  </div>
+  </div>
+<br>
+-->
     {{description}}
     <br><br>
     <a role="button" href= "/trivia"class="btn btn-secondary">More Trivia</a>
-  </div>
-  </div>
+
 {% endblock %}
