@@ -149,3 +149,10 @@ qinaL -- 2021-12-23 14:14
     - hopefully code looks nicer now 
     - api 0 and 1 should work fine now
     - api 2 has an issue where you must inputted exactly as correct answer so if correct answer was "<i>Lonesome Dove</i>" Lonesome Dove was wrong
+    
+qinaL -- 2021-12-23 22:24
+- overlayed collectible over fire image using bootstrap's card feature (different method was used last time but it didn't make fire image responsive so i changed it)
+    - collectible is in center of fire
+    - collectible is also slightly transparent so it looks like its being burned (and so if user wants to see clear image, they'll need to actually collect the image)
+- maded a slightly rounded border to the collectible images b/c i think it makes it look nicer
+- also for jinja inherited templates, {# ... #} is how you make comments 
