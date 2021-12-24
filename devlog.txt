@@ -14,7 +14,7 @@ thomasY -- 2021-12-09 20:37
 
 qinaL -- 2021-12-09 21:28
 - added some small specifications/illustration to database
-- added optional risky questions for if we have additional time to implement to increase fun factor \
+- added optional risky questions for if we have additional time to implement to increase fun factor 
 
 yayingLL -- 2021-12-10 09:20
 - added project description
@@ -142,7 +142,7 @@ thomasY -- 2021-12-22 23:32
 - Implemented a basic profile page that displays the users collectibles when logged in
 
 qinaL -- 2021-12-23 13:57
-- trivia api 1 (opentdb) kept throwing an error; the info given from api was processed wrong (the dict given was confusing); I fixeds it so it works now
+- trivia api 1 (opentdb) kept throwing an error; the info given from api was processed wrong (the dict given was confusing); I fixed it so it works now
 
 qinaL -- 2021-12-23 14:14
 - added some more comments to /trivia so code is easier to read; cleaned up some extraneous code; fixed other errors found
