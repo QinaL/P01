@@ -127,8 +127,8 @@ def register():
 def trivia():
     if request.method == 'GET':
         
-        #randomize what trivia api to use 
-        num = 2#random.randint(0, 2)
+        #randomly choose which trivia api to use 
+        num = 0#random.randint(0, 2)
         
         #trivia api 0
         if (num == 0):
@@ -136,8 +136,9 @@ def trivia():
             http = urllib.request.urlopen("https://api.trivia.willfry.co.uk/questions?limit=1") #HTTP Response object (containing the JSON info); contains 1 question
             questions = json.load(http) #questions is a list of dictionaries; each dictionary entry is a question + answers + info
             
-            #processes info 
             print(questions)
+            
+            #processes info 
             for value in questions: #for every dictionary in the questions list
                 question = value.get('question') #store the value of the key 'question'; is a string
                 session['correct_answer'] = value.get('correctAnswer') #is a string

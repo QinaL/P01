@@ -6,11 +6,21 @@
     body{
         background-color: #CF1259;
     }
-    .fire{
-    	background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4CBdeXDr9QvjaazFSeVYVK9Vnd8Ej2ntrM5Zn6Ok2YYsWk2mqgUkcL6nMS62uADNl7J8&usqp=CAU");
-    	background-repeat: no-repeat;
-    	background-position: center;
-    	background-size: cover;
+    {# this makes the collectible image smaller than the fire #}
+    .card-img{
+        height: 70%;
+        width: auto;
+        opacity: 0.75; {# makes image slightly transparent #}
+    }
+    {# this centers the collectible image in the middle in the fire #}
+    .card-img-overlay{
+        display: flex;
+        align-items: center; {# centers vertically #}
+        justify-content: center; {# centers horizontally #}
+    }
+    {# default comes with a 1px width border, gets rid of border to match style of rest of site#}
+    .card{
+        border-width: 0px;
     }
 </style>
 {% endblock %}
@@ -21,23 +31,13 @@
 
 <div class="card">
     <img class="card-img-top" src="https://wpcdn.us-east-1.vip.tn-cloud.net/www.abc6.com/content/uploads/2020/05/flames.jpg">
-    <div class="card-body">
-        <p class="card-text"> stuff </p>
-        <img class="card-img-top" src="{{ picture }}">
+    <div class="card-img-overlay">
+        <img class="card-img" src="{{ picture }}">
     </div>
 </div>
-
-
-<!--
-<div class="fire">
-  <div class="container-fluid" style="height:500px">
-    <img src="{{ picture }}" class="img-fluid mh-100">
-  </div>
-  </div>
 <br>
--->
-    {{description}}
-    <br><br>
-    <a role="button" href= "/trivia"class="btn btn-secondary">More Trivia</a>
+{{description}}
+<br><br>
+<a role="button" href= "/trivia"class="btn btn-secondary">More Trivia</a>
 
 {% endblock %}

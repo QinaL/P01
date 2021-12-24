@@ -3,9 +3,12 @@
 
 {% block css %}
 <style>
-  body{
-    background-color: #26A671;
-  }
+    body{
+        background-color: #26A671
+    }
+    img{
+        border-radius: .25rem;
+    }
 </style>
 {% endblock %}
 
@@ -17,7 +20,7 @@
   {% endif %}
   <div class="container-fluid" style="height:500px">
     <img src="{{ picture }}" class="img-fluid mh-100">
-    <br>
+      <br>
     {{description}}
     <br><br>
     <a role="button" href= "/trivia"class="btn btn-secondary">More Trivia</a>
