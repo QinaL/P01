@@ -156,3 +156,11 @@ qinaL -- 2021-12-23 22:24
     - collectible is also slightly transparent so it looks like its being burned (and so if user wants to see clear image, they'll need to actually collect the image)
 - maded a slightly rounded border to the collectible images b/c i think it makes it look nicer
 - also for jinja inherited templates, {# ... #} is how you make comments 
+
+qinaL -- 2021-12-29 22:26
+- added try except blocks to all 3 trivia apis in case they fail
+- made error image fluid and fit page 
+- transported trivia api 0 and 1 into separate individual functions so their structure matches that of collectibles with calling apis and rendering in /trivia
+    - this makes /trivia shorter and avoids repeating code of rendering 'trivia.html' 
+    - trivia api 2 wasn't given separate function because it uses a different template b/c it's short answer
+- add some more comments to make code hopefully easier to understand
