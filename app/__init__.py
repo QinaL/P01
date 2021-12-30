@@ -130,61 +130,19 @@ def trivia():
         #randomly choose which trivia api to use 
         num = 0#random.randint(0, 2)
         
-        #trivia api 0
         if (num == 0):
-            #gets info from api
-            http = urllib.request.urlopen("https://api.trivia.willfry.co.uk/questions?limit=1") #HTTP Response object (containing the JSON info); contains 1 question
-            questions = json.load(http) #questions is a list of dictionaries; each dictionary entry is a question + answers + info
-            
-            print(questions)
-            
-            #processes info 
-            for value in questions: #for every dictionary in the questions list
-                question = value.get('question') #store the value of the key 'question'; is a string
-                session['correct_answer'] = value.get('correctAnswer') #is a string
-                incorrect_answers = value.get('incorrectAnswers') #is a list of strings
-            #add correct answer so incorrect_answer has all possible answer choices
-            incorrect_answers.append(session['correct_answer'])
-            #randomize order answer choices appear
-            random.shuffle(incorrect_answers)
-            
-            print(session['correct_answer'])
-            print(islogged())
-            
-            return render_template("trivia.html", question=question, choices=incorrect_answers)
-        
-        #trivia api 1
+            triviaInfo = triviaApi0()
         elif (num == 1):
-            #gets info from api
-            http = urllib.request.urlopen("https://opentdb.com/api.php?amount=1&difficulty=hard")
-            questions = json.load(http)
-            '''
-            what the api gives is vv complicated compared to previous api, also the key name for this api was the variable name of the last                 api so this api is processed in diff format than last one
-            '''
-            #for debugging
-            print(questions)
-            print(questions['results'][0])
-            
-            #processes info 
-            session['correct_answer'] = questions['results'][0]['correct_answer']
-            question= questions['results'][0]['question'] 
-            incorrectAnswers = [] #list for containing all the other answer choices
-            for value in questions['results'][0]['incorrect_answers']: 
-                incorrectAnswers.append(value)
-            #add correct answer so incorrectAnswer has all possible answer choices
-            incorrectAnswers.append(session['correct_answer'])
-            #randomize order answer choices appear
-            random.shuffle(incorrectAnswers)
-
-            print(session['correct_answer'])
-            print(islogged())
-            
-            return render_template("trivia.html", question=question, choices=incorrectAnswers)
-        
-        #trivia api 2
+            triviaInfo = triviaApi1()
+        # trivia api 2 does not have own function b/c it uses diff template and it is short-answer while api 0 and 1 are multiple choice
         else:
-            http = urllib.request.urlopen("https://jservice.io/api/random")
-            questions = json.load(http)
+            # try except in case api fails
+            try:
+                http = urllib.request.urlopen("https://jservice.io/api/random")
+                questions = json.load(http)
+            except:
+                return render_template('error.html')
+                
             session['correct_answer'] = questions[0]['answer']
             print(session['correct_answer'])
             return render_template("triviasa.html", question=questions[0]['question'])
@@ -200,6 +158,11 @@ def trivia():
                 print(hint)
                 return render_template("trivia.html", question=question, choices=incorrect_answers, hints=hint)
         '''
+        
+        if triviaInfo == "Error":
+            return render_template('error.html')
+        return render_template('trivia.html', question=triviaInfo[0], choices=triviaInfo[1])
+        
     #POST
     else:
         # randomly choose a collectible
@@ -242,12 +205,75 @@ def trivia():
         else:
             return render_template('burn.html', picture=collectible[0], description = collectible[1])
 
+''' api trivia functions (only 0 and 1, api 2 has diff format); for GET /trivia; return tuples of question, answer choices '''
+        
+# processing trivia api 0
+def triviaApi0():
+    #try except in case api fails
+    try: 
+        #gets info from api; HTTP Response object (containing the JSON info); contains 1 question
+        http = urllib.request.urlopen("https://api.trivia.willfry.co.uk/questions?limit=1") 
+        #questions is a list of dictionaries; each dictionary entry is a question + answers + info
+        questions = json.load(http) 
+    except: 
+        return "Error"
+            
+    print(questions)
+            
+    #processes info 
+    for value in questions: #for every dictionary in the questions list
+        question = value.get('question') #store the value of the key 'question'; is a string
+        session['correct_answer'] = value.get('correctAnswer') #is a string
+        incorrect_answers = value.get('incorrectAnswers') #is a list of strings
+    #add correct answer so incorrect_answer has all possible answer choices
+    incorrect_answers.append(session['correct_answer'])
+    #randomize order answer choices appear
+    random.shuffle(incorrect_answers)
+            
+    print(session['correct_answer'])
+    print(islogged())
+    
+    triviaInfo = (question, incorrect_answers)
+    return triviaInfo
+    
+# processing trivia api 1
+def triviaApi1():
+    # try except in case api fails
+    try:
+        #gets info from api
+        http = urllib.request.urlopen("https://opentdb.com/api.php?amount=1&difficulty=hard")
+        questions = json.load(http)
+    except:
+        return "Error"
     '''
-    collectibles from apis are animal-specific (there is a separate function for each animal type)
-    because each api gives us information in a different format from each other
+    what the api gives is vv complicated compared to previous api, also the key name for this api was the variable name of the last     
+    api so this api is processed in diff format than last one
     '''
+    #for debugging
+    print(questions)
+    print(questions['results'][0])
+            
+    #processes info 
+    session['correct_answer'] = questions['results'][0]['correct_answer']
+    question= questions['results'][0]['question'] 
+    incorrectAnswers = [] #list for containing all the other answer choices
+    for value in questions['results'][0]['incorrect_answers']: 
+        incorrectAnswers.append(value)
+    #add correct answer so incorrectAnswer has all possible answer choices
+    incorrectAnswers.append(session['correct_answer'])
+    #randomize order answer choices appear
+    random.shuffle(incorrectAnswers)
 
-#for axolotl collectibles, returns tuples of pic, description back to trivia
+    print(session['correct_answer'])
+    print(islogged())
+    
+    triviaInfo=(question, incorrectAnswers)
+    return triviaInfo
+    
+    
+''' collectible functions; for POST /trivia; returns tuples of pic, description'''
+    
+#for axolotl collectibles
 def axolotl():
     # in case api fails
     try:
@@ -267,7 +293,7 @@ def axolotl():
 
     return collectibleInfo
 
-#for dog collectibles, returns tuples of pic, description back to trivia
+#for dog collectibles
 def dog():
     try:
         http = urllib.request.urlopen("https://dog.ceo/api/breeds/image/random")
@@ -281,7 +307,7 @@ def dog():
 
     return collectibleInfo
 
-#for cat collectibles, returns tuples of pic, description back to trivia
+#for cat collectibles
 def cat():
     try:
         http = urllib.request.urlopen("https://api.thecatapi.com/v1/images/search")
@@ -306,23 +332,23 @@ def insertCollectible():
 
 @app.route("/profile", methods=['POST', 'GET'])
 def profile():
-   try:
+    try:
         username = session['username']
-   except:
+    except:
         return render_template('profile.html', loggedIn=False)
-   collectibles = []
-   db = sqlite3.connect('users.db')
-   c = db.cursor()
-   c.execute("SELECT Object FROM {name} WHERE Type='Collectible'".format(name=username))
-   collectibles=c.fetchall()
-   i=0
-   while (i < len(collectibles)):
+    collectibles = []
+    db = sqlite3.connect('users.db')
+    c = db.cursor()
+    c.execute("SELECT Object FROM {name} WHERE Type='Collectible'".format(name=username))
+    collectibles=c.fetchall()
+    i=0
+    while (i < len(collectibles)):
         collectibles[i]=collectibles[i][0]
         i+=1
-   db.commit()
-   db.close()
-   print(collectibles)
-   return render_template('profile.html', loggedIn=True, collection=collectibles)
+    db.commit()
+    db.close()
+    print(collectibles)
+    return render_template('profile.html', loggedIn=True, collection=collectibles)
     
 if __name__ == "__main__":
     app.debug = True

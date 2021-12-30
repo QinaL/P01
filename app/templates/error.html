@@ -2,10 +2,16 @@
 {% block title %} Woops {% endblock %}
 
 {% block css %} 
+<style>
+    .img-fluid{
+        max-height: 500px;
+        width: auto;
+    }
+</style>
 {% endblock %}
 
 {% block body %} 
-Sorry! This site is down right now; Come back another time!
+Sorry! This site is down right now. Come back another time!
 <br><br>
-<img src="https://www.meme-arsenal.com/memes/b6d11b1c9655513b1c3d37ad72a1f206.jpg">
+<img src="https://www.meme-arsenal.com/memes/b6d11b1c9655513b1c3d37ad72a1f206.jpg" class="img-fluid">
 {% endblock %}
