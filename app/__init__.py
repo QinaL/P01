@@ -17,6 +17,13 @@ def home():
     if 'collectible' in session.keys() and islogged:
         insertCollectible()
     print(session)
+    # for purely testing
+    if islogged():
+        db = sqlite3.connect('users.db')
+        c = db.cursor()
+        c.execute("SELECT * FROM {name}".format(name=session['username']))
+        print(c.fetchall())
+        
     return render_template('home.html')
 
 @app.route("/logout",  methods=['GET', 'POST'])
@@ -112,7 +119,7 @@ def register():
 
             #preload hints and fire extinguishers in each user; default 2 each
             #FIX UP SO INCLUDES ? ? ?
-            c.execute("INSERT INTO {name}(Type, Object, Number) VALUES('item', 'hint', 2)".format(name=username))
+            c.execute("INSERT INTO {name}(Type, Object, Number) VALUES('Item', 'Hint', 2)".format(name=username))
 
         else: #error: username already taken
             return render_template("register.html", error="Username taken already")
@@ -161,7 +168,7 @@ def trivia():
         
         if triviaInfo == "Error":
             return render_template('error.html')
-        return render_template('trivia.html', question=triviaInfo[0], choices=triviaInfo[1])
+        return render_template('trivia.html', question=triviaInfo[0], choices=triviaInfo[1], logged=islogged(), hint=getNumOfHints())
         
     #POST
     else:
@@ -349,7 +356,51 @@ def profile():
     db.close()
     print(collectibles)
     return render_template('profile.html', loggedIn=True, collection=collectibles)
+
+@app.route("/hint", methods=['POST', 'GET'])
+def hint():
+    # if users manually goes to /hint, they will be redirected to /trivia
+    if request.method == "GET":
+        return redirect("/trivia")
+    # when use hint button is pressed
+    else:
+        question = request.form.get('Question')
+        choices = request.form.get('Choices')
+        print(choices)
+        '''
+        choices when received from request is a string in the look of a list
+        ex: "['Mark Messier', 'Maurice Richard', 'Wayne Gretzky', 'Sidney Crosby']"
+        we have to convert this string back into original list form
+        '''
+        removeChar="[]'"
+        # iterates through each character in removeChar and deletes it from the choices string
+        for char in removeChar:
+            choices = choices.replace(char,"")
+        choices = list(choices.split(", "))
+        print(choices)
+        
+        correct = session['correct_answer']
+        print(correct)
+        for ans in choices:
+            if ans != correct: 
+                choices.remove(ans)
+                break
+        print(choices)
+        
+        return render_template('trivia.html', question=question, choices=choices, logged=islogged(), hint=getNumOfHints())
     
+    
+# gets how many hints a user has    
+def getNumOfHints():
+    if islogged():
+        db = sqlite3.connect('users.db')
+        c = db.cursor()
+        c.execute("SELECT Number FROM {name} WHERE Object=?".format(name=session['username']), ("Hint",))
+        hint = c.fetchone()[0] #c.fetchone gives a tuple, so [0] to get the number
+    else:
+        hint=-1
+    return hint
+
 if __name__ == "__main__":
     app.debug = True
     app.run()

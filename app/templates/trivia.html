@@ -16,5 +16,18 @@
       <input type="submit" value="{{i}}">
     </form>
   {% endfor %}
+<br>
+{% if logged %}
+Hints You Have: {{hint}} 
+<form action="/hint" method="POST">
+    <input type="hidden" name="Question" value="{{question}}">
+    <input type="hidden" name="Choices" value="{{choices}}">
+    <input type="submit" name="Hint Button" value="Use Hint">
+</form>
+{% else %}
+<a href="/login"> Login </a>to use items!
+{% endif %} 
+<br>
+
 
 {% endblock %}
