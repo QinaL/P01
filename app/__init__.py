@@ -135,7 +135,7 @@ def trivia():
     if request.method == 'GET':
         
         #randomly choose which trivia api to use 
-        num = 0#random.randint(0, 2)
+        num = 2#random.randint(0, 2)
         
         if (num == 0):
             triviaInfo = triviaApi0()
@@ -149,23 +149,12 @@ def trivia():
                 questions = json.load(http)
             except:
                 return render_template('error.html')
-                
+            
             session['correct_answer'] = questions[0]['answer']
             print(session['correct_answer'])
-            return render_template("triviasa.html", question=questions[0]['question'])
+            return render_template("triviasa.html", question=questions[0]['question'], logged=islogged(), hint=getNumOfHints())
         
-       
-        '''
-                username = request.form.get("username")
-
-                db = sqlite3.connect('users.db')
-                c = db.cursor()
-                #c.execute("SELECT Number FROM {name} WHERE Object=?",("Hint",).format(name=username))
-                hint = c.fetchone()
-                print(hint)
-                return render_template("trivia.html", question=question, choices=incorrect_answers, hints=hint)
-        '''
-        
+        # if api fails, error page shown; else mc qus are rendered
         if triviaInfo == "Error":
             return render_template('error.html')
         return render_template('trivia.html', question=triviaInfo[0], choices=triviaInfo[1], logged=islogged(), hint=getNumOfHints())
@@ -357,6 +346,7 @@ def profile():
     print(collectibles)
     return render_template('profile.html', loggedIn=True, collection=collectibles)
 
+# for mc qus; gets rid of 1 wrong answer choice
 @app.route("/hint", methods=['POST', 'GET'])
 def hint():
     # if users manually goes to /hint, they will be redirected to /trivia
@@ -366,28 +356,40 @@ def hint():
     else:
         question = request.form.get('Question')
         choices = request.form.get('Choices')
-        print(choices)
         '''
         choices when received from request is a string in the look of a list
         ex: "['Mark Messier', 'Maurice Richard', 'Wayne Gretzky', 'Sidney Crosby']"
-        we have to convert this string back into original list form
+        we have to convert this string back into list type
         '''
         removeChar="[]'"
         # iterates through each character in removeChar and deletes it from the choices string
         for char in removeChar:
             choices = choices.replace(char,"")
         choices = list(choices.split(", "))
-        print(choices)
         
+        # gets rid of one wrong answer choice
         correct = session['correct_answer']
         print(correct)
         for ans in choices:
             if ans != correct: 
                 choices.remove(ans)
                 break
-        print(choices)
         
-        return render_template('trivia.html', question=question, choices=choices, logged=islogged(), hint=getNumOfHints())
+        # decrease number of hints in database
+        hint=getNumOfHints()
+        hint -= 1
+        db = sqlite3.connect('users.db')
+        c = db.cursor()
+        c.execute("UPDATE {name} SET Number = ? WHERE Object=?".format(name=session['username']), (hint, "Hint",))
+        db.commit()
+        db.close()
+        
+        # if after getting rid of 1 wrong ans choice, there is only 1 choice left, hint button has to disappear
+        logged = islogged()
+        if len(choices) == 1:
+            logged = False # even tho, user is logged in, this is manually changed to False to make hint button disappear
+        
+        return render_template('trivia.html', question=question, choices=choices, logged=logged, hint=getNumOfHints())
     
     
 # gets how many hints a user has    
@@ -400,6 +402,17 @@ def getNumOfHints():
     else:
         hint=-1
     return hint
+
+# for SA qus; first letter is given
+@app.route("/hintSA", methods=['POST', 'GET'])
+def hintsa():
+    # if user manually goes here, they are redirected /trivia
+    if request.method == "GET":
+        return redirect("/trivia")
+    # when hint button is pressed
+    else:
+        question= request.form.get('Question')
+        return render_template('triviasa.html', question=question)
 
 if __name__ == "__main__":
     app.debug = True

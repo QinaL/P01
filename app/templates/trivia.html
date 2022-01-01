@@ -8,6 +8,7 @@
 {% endblock %}
 
 {% block body %}
+
   {{question}} <!-- displays questions -->
   <br><br>
   {% for i in choices %} <!-- displays choices -->
@@ -17,17 +18,16 @@
     </form>
   {% endfor %}
 <br>
+
 {% if logged %}
 Hints You Have: {{hint}} 
+{% if hint > 0 %}
 <form action="/hint" method="POST">
     <input type="hidden" name="Question" value="{{question}}">
     <input type="hidden" name="Choices" value="{{choices}}">
     <input type="submit" name="Hint Button" value="Use Hint">
 </form>
-{% else %}
-<a href="/login"> Login </a>to use items!
-{% endif %} 
-<br>
-
+{% endif %}
+{% endif %}
 
 {% endblock %}
