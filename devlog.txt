@@ -167,8 +167,16 @@ qinaL -- 2021-12-29 22:26
 
 qinaL -- 2021-12-31 23:29
 - added hint counter display and hint button on /trivia
-    - only shows if logged in; if not, text saying to log in is shown
+    - only shows if logged in
 - created functions getNumOfHints() and hint(), and new route of /hint for when hint button is pressed
     - users can now log in, see how many hints they have, and press hint button, which reloads same question and answer choices with one wrong answer choice eliminated 
 - only for /trivia, so only works for mc questions; sa will be implemented soon
-    
+
+qinaL -- 2021-1-01 0:33
+- made hint button disappear if user has 0 hints
+- forgot to decrease # of hints users has in database last time; implemented this time
+- implemented catch so that if only 1 answer choice remains, user can't see/use hints
+- SA hints 
+    - hint button appears for triviasa.html
+    - if pressed, a page with same qu loads
+    - actual hint function to be implemented
