@@ -164,3 +164,11 @@ qinaL -- 2021-12-29 22:26
     - this makes /trivia shorter and avoids repeating code of rendering 'trivia.html' 
     - trivia api 2 wasn't given separate function because it uses a different template b/c it's short answer
 - add some more comments to make code hopefully easier to understand
+
+qinaL -- 2021-12-31 23:29
+- added hint counter display and hint button on /trivia
+    - only shows if logged in; if not, text saying to log in is shown
+- created functions getNumOfHints() and hint(), and new route of /hint for when hint button is pressed
+    - users can now log in, see how many hints they have, and press hint button, which reloads same question and answer choices with one wrong answer choice eliminated 
+- only for /trivia, so only works for mc questions; sa will be implemented soon
+    
