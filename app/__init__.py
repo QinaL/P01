@@ -185,12 +185,11 @@ def trivia():
         # when api fails
         if collectible == "Error":
             return render_template('error.html')
-
-        if session['correct_answer'] == request.form['answer']:
-
+        
+        if session['correct_answer'] == request.form['answer'] or filterSA(session['correct_answer'], request.form['answer']):
             loggedin = islogged()
-            print(loggedin)
-            #print(session.get('username'))
+            
+            # puts this in session for when a non-loggedin user logins to get collectible 
             session['collectible'] = collectible[0]
 
             # if user is logged in, collectible info gets added to their database
@@ -265,6 +264,35 @@ def triviaApi1():
     
     triviaInfo=(question, incorrectAnswers)
     return triviaInfo
+
+'''
+for trivia api 2
+returns true or false; filters to check if given ans matches correct answer
+'''
+def filterSA(correct, given):
+
+    # makes both strings all lowercase to make case irrelevant in 
+    correct = correct.lower()
+    given = given.lower()
+    
+    # removes any " in strings in case answer is a book/album/etc that has quotes around it
+    # will not require users to put quotes around answers of such 
+    removeChar="\""
+    for char in removeChar:
+        correct = correct.replace(char,"")
+    for char in removeChar:
+        given = given.replace(char,"")
+    
+    # some correct ans given by api are in form of <i>House</i>; this filters out the <> mess
+    substring = "<"
+    if substring in correct:
+        # gets rid of first three characters (<i>)
+        correct = correct[3:]
+        # finds and gets rid of the behind </i>
+        index = correct.find(substring)
+        correct = correct[:index]
+    
+    return correct == given
     
     
 ''' collectible functions; for POST /trivia; returns tuples of pic, description'''
