@@ -196,7 +196,7 @@ qinaL -- 2021-01-02 0:47
     - now displays number of how many collectibles a user has
         - getNumOfCollection() was created to do so
     - to see collection, a link is given to send user to /collection
-- /collection and collection/html made to display all the collectibles user has gotten
+- /collection and collection.html made to display all the collectibles user has gotten
 
 qinaL -- 2021-01-02 13:14
 - implemented SA hints
