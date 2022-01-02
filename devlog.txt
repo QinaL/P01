@@ -172,7 +172,7 @@ qinaL -- 2021-12-31 23:29
     - users can now log in, see how many hints they have, and press hint button, which reloads same question and answer choices with one wrong answer choice eliminated 
 - only for /trivia, so only works for mc questions; sa will be implemented soon
 
-qinaL -- 2021-1-01 0:33
+qinaL -- 2021-01-01 0:33
 - made hint button disappear if user has 0 hints
 - forgot to decrease # of hints users has in database last time; implemented this time
 - implemented catch so that if only 1 answer choice remains, user can't see/use hints
@@ -180,3 +180,12 @@ qinaL -- 2021-1-01 0:33
     - hint button appears for triviasa.html
     - if pressed, a page with same qu loads
     - actual hint function to be implemented
+
+qinaL -- 2021-01-01 23:46
+- SA correct answer filter implemented
+    - makes case irrelevant
+    - makes quotes for ans with albums/books/etc not required 
+    - api answers with <i> can be correct
+        - ex: if ans by api is <i>House</i>, a user inputting house is correct
+    - function filterSA() was created for this; it is called in /trivia POST
+    
