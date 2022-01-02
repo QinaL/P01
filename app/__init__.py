@@ -23,7 +23,7 @@ def home():
         c = db.cursor()
         c.execute("SELECT * FROM {name}".format(name=session['username']))
         print(c.fetchall())
-        
+
     return render_template('home.html')
 
 @app.route("/logout",  methods=['GET', 'POST'])
@@ -105,6 +105,8 @@ def register():
             return render_template("register.html", error="Empty password, you'll get hacked y'know :)")
         elif password != reenterpasswd:
             return render_template("register.html", error="Passwords don't match")
+        elif not userCheck(username):
+            return render_template("register.html", error="Username should only contain alphanumeric characters")
 
         #look in users.db and see if user with username and password combination exists
         db = sqlite3.connect('users.db')
@@ -129,14 +131,20 @@ def register():
     else:
         return render_template("register.html")
 
+def userCheck(username):
+    '''Checks if the username is only alphanumeric characters'''
+    for char in username:
+        if not (char.isdigit() or char.isalpha()):
+            return False
+    return True
 
 @app.route("/trivia", methods=['POST', 'GET'])
 def trivia():
     if request.method == 'GET':
-        
-        #randomly choose which trivia api to use 
+
+        #randomly choose which trivia api to use
         num = random.randint(0, 2)
-        
+
         if (num == 0):
             triviaInfo = triviaApi0()
         elif (num == 1):
@@ -149,18 +157,18 @@ def trivia():
                 questions = json.load(http)
             except:
                 return render_template('error.html')
-            
+
             correct= questions[0]['answer']
             # for api 2; sometimes ans is in form of <i>ans</i>, cleanSA() gets rid of <> part
             session['correct_answer'] = cleanSA(correct)
             print(session['correct_answer'])
             return render_template("triviasa.html", question=questions[0]['question'], logged=islogged(), hint=getNumOfHints(), hinted=False)
-        
+
         # if api fails, error page shown; else mc qus are rendered
         if triviaInfo == "Error":
             return render_template('error.html')
         return render_template('trivia.html', question=triviaInfo[0], choices=triviaInfo[1], logged=islogged(), hint=getNumOfHints())
-        
+
     #POST
     else:
         # randomly choose a collectible
@@ -187,13 +195,13 @@ def trivia():
         # when api fails
         if collectible == "Error":
             return render_template('error.html')
-        
+
         correct = session['correct_answer']
-        given = request.form['answer']    
+        given = request.form['answer']
         if correct == given or filterSA(correct, given):
             loggedin = islogged()
-            
-            # puts this in session for when a non-loggedin user logins to get collectible 
+
+            # puts this in session for when a non-loggedin user logins to get collectible
             session['collectible'] = collectible[0]
 
             # if user is logged in, collectible info gets added to their database
@@ -205,21 +213,21 @@ def trivia():
             return render_template('burn.html', picture=collectible[0], description = collectible[1])
 
 ''' api trivia functions (only 0 and 1, api 2 has diff format); for GET /trivia; return tuples of question, answer choices '''
-        
+
 # processing trivia api 0
 def triviaApi0():
     #try except in case api fails
-    try: 
+    try:
         #gets info from api; HTTP Response object (containing the JSON info); contains 1 question
-        http = urllib.request.urlopen("https://api.trivia.willfry.co.uk/questions?limit=1") 
+        http = urllib.request.urlopen("https://api.trivia.willfry.co.uk/questions?limit=1")
         #questions is a list of dictionaries; each dictionary entry is a question + answers + info
-        questions = json.load(http) 
-    except: 
+        questions = json.load(http)
+    except:
         return "Error"
-            
+
     print(questions)
-            
-    #processes info 
+
+    #processes info
     for value in questions: #for every dictionary in the questions list
         question = value.get('question') #store the value of the key 'question'; is a string
         db = sqlite3.connect("users.db")
@@ -244,13 +252,13 @@ def triviaApi0():
     incorrect_answers.append(session['correct_answer'])
     #randomize order answer choices appear
     random.shuffle(incorrect_answers)
-            
+
     print(session['correct_answer'])
     print(islogged())
-    
+
     triviaInfo = (question, incorrect_answers)
     return triviaInfo
-    
+
 # processing trivia api 1
 def triviaApi1():
     # try except in case api fails
@@ -261,16 +269,16 @@ def triviaApi1():
     except:
         return "Error"
     '''
-    what the api gives is vv complicated compared to previous api, also the key name for this api was the variable name of the last     
+    what the api gives is vv complicated compared to previous api, also the key name for this api was the variable name of the last
     api so this api is processed in diff format than last one
     '''
     #for debugging
     print(questions)
     print(questions['results'][0])
-            
-    #processes info 
-    session['correct_answer'] = questions['results'][0]['correct_answer']
-    question= questions['results'][0]['question']
+
+    #processes info
+    session['correct_answer'] = htmlDecode(questions['results'][0]['correct_answer'])
+    question= htmlDecode(questions['results'][0]['question'])
     db = sqlite3.connect("users.db")
     c = db.cursor()
     c.execute("SELECT Questions FROM users WHERE username=?", (session['username'],))
@@ -288,8 +296,8 @@ def triviaApi1():
     db.close()
 
     incorrectAnswers = [] #list for containing all the other answer choices
-    for value in questions['results'][0]['incorrect_answers']: 
-        incorrectAnswers.append(value)
+    for value in questions['results'][0]['incorrect_answers']:
+        incorrectAnswers.append(htmlDecode(value))
     #add correct answer so incorrectAnswer has all possible answer choices
     incorrectAnswers.append(session['correct_answer'])
     #randomize order answer choices appear
@@ -297,9 +305,20 @@ def triviaApi1():
 
     print(session['correct_answer'])
     print(islogged())
-    
+
     triviaInfo=(question, incorrectAnswers)
     return triviaInfo
+
+def htmlDecode(str):
+    '''Decodes string from HTML encoding'''
+    codes={
+        "&quot;":'"',
+        "&#039;":"'",
+        "&amp;":"&",
+    }
+    for key in codes:
+        str = str.replace(key, codes[key])
+    return str
 
 '''
 for trivia api 2
@@ -307,18 +326,18 @@ returns true or false; filters to check if given ans matches correct answer
 '''
 def filterSA(correct, given):
 
-    # makes both strings all lowercase to make case irrelevant in 
+    # makes both strings all lowercase to make case irrelevant in
     correct = correct.lower()
     given = given.lower()
-    
+
     # removes any " in strings in case answer is a book/album/etc that has quotes around it
-    # will not require users to put quotes around answers of such 
+    # will not require users to put quotes around answers of such
     removeChar="\""
     for char in removeChar:
         correct = correct.replace(char,"")
     for char in removeChar:
         given = given.replace(char,"")
-    
+
     return correct == given
 
 '''
@@ -336,10 +355,10 @@ def cleanSA(correct):
         index = correct.find(substring)
         correct = correct[:index]
     return correct
-    
-    
+
+
 ''' collectible functions; for POST /trivia; returns tuples of pic, description'''
-    
+
 #for axolotl collectibles
 def axolotl():
     # in case api fails
@@ -417,27 +436,27 @@ def hint():
         for char in removeChar:
             choices = choices.replace(char,"")
         choices = list(choices.split(", "))
-        
+
         # gets rid of one wrong answer choice
         correct = session['correct_answer']
         print(correct)
         for ans in choices:
-            if ans != correct: 
+            if ans != correct:
                 choices.remove(ans)
                 break
-        
+
         # decrease num of hints in db
         hintUsed()
-        
+
         # if after getting rid of 1 wrong ans choice, there is only 1 choice left, hint button has to disappear
         logged = islogged()
         if len(choices) == 1:
             logged = False # even tho, user is logged in, this is manually changed to False to make hint button disappear
-        
+
         return render_template('trivia.html', question=question, choices=choices, logged=logged, hint=getNumOfHints())
-    
-    
-# gets how many hints a user has    
+
+
+# gets how many hints a user has
 def getNumOfHints():
     if islogged():
         db = sqlite3.connect('users.db')
@@ -457,17 +476,17 @@ def hintsa():
     # when hint button is pressed
     else:
         question= request.form.get('Question')
-        
+
         clue = session['correct_answer']
         # if clue is 2 or less letters; only first letter is given; otherwise, first 2 letters is given
         if len(clue) > 2:
             clue = clue[0:2]
         else:
             clue = clue[0:1]
-            
+
         # decrease num of hints in db
-        hintUsed()    
-        
+        hintUsed()
+
         # hint button is not longered shown; can't use mutliple hints in same SA question (unlike mc)
         return render_template('triviasa.html', question=question, hinted=True, clue=clue)
 
@@ -481,10 +500,10 @@ def hintUsed():
     db.commit()
     db.close()
     return 0
-    
+
 @app.route("/profile", methods=['POST', 'GET'])
 def profile():
-    
+
     return render_template('profile.html', loggedIn= islogged(), numOfCollectibles= getNumOfCollectibles(), numOfHints= getNumOfHints())
     '''
     try:
@@ -523,7 +542,7 @@ def collection():
         db.commit()
         db.close()
         return render_template('collection.html', collection=collectibles)
-    
+
 def getNumOfCollectibles():
     if islogged():
         db = sqlite3.connect('users.db')
@@ -533,7 +552,7 @@ def getNumOfCollectibles():
     else:
         collectible=-1
     return collectible
-    
+
 if __name__ == "__main__":
     app.debug = True
     app.run()
