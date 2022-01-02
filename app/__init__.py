@@ -135,7 +135,7 @@ def trivia():
     if request.method == 'GET':
         
         #randomly choose which trivia api to use 
-        num = 2#random.randint(0, 2)
+        num = random.randint(0, 2)
         
         if (num == 0):
             triviaInfo = triviaApi0()
@@ -150,9 +150,11 @@ def trivia():
             except:
                 return render_template('error.html')
             
-            session['correct_answer'] = questions[0]['answer']
+            correct= questions[0]['answer']
+            # for api 2; sometimes ans is in form of <i>ans</i>, cleanSA() gets rid of <> part
+            session['correct_answer'] = cleanSA(correct)
             print(session['correct_answer'])
-            return render_template("triviasa.html", question=questions[0]['question'], logged=islogged(), hint=getNumOfHints())
+            return render_template("triviasa.html", question=questions[0]['question'], logged=islogged(), hint=getNumOfHints(), hinted=False)
         
         # if api fails, error page shown; else mc qus are rendered
         if triviaInfo == "Error":
@@ -187,20 +189,7 @@ def trivia():
             return render_template('error.html')
         
         correct = session['correct_answer']
-        given = request.form['answer']
-        
-        print(correct)
-        
-        # for api 2; sometimes ans is in form of <i>ans</i>, cleanSA() gets rid of <> part
-        newCorrect = cleanSA(correct)
-        if correct != newCorrect:
-            session['correct_answer'] = newCorrect
-        
-        print(correct)
-        
-        print( correct==given)
-        print( filterSA(correct, given))
-        
+        given = request.form['answer']    
         if correct == given or filterSA(correct, given):
             loggedin = islogged()
             
@@ -301,9 +290,10 @@ def filterSA(correct, given):
     return correct == given
 
 '''
-some correct ans given by api are in form of <i>House</i>; this filters out the <> mess
-not part of filterSA b/c <> mess needs to be out in session['correct_answer']
-so it doesn't appear if user gets qu wrong and correct_answer is displayed in burn.html
+- some correct ans given by api are in form of <i>House</i>; this filters out the <> mess
+- not part of filterSA b/c <> mess needs to be out in session['correct_answer']
+    - so it doesn't appear if user gets qu wrong and correct_answer is displayed in burn.html
+    - and so <> part is not given in the SA hint
 '''
 def cleanSA(correct):
     substring = "<"
@@ -404,14 +394,8 @@ def hint():
                 choices.remove(ans)
                 break
         
-        # decrease number of hints in database
-        hint=getNumOfHints()
-        hint -= 1
-        db = sqlite3.connect('users.db')
-        c = db.cursor()
-        c.execute("UPDATE {name} SET Number = ? WHERE Object=?".format(name=session['username']), (hint, "Hint",))
-        db.commit()
-        db.close()
+        # decrease num of hints in db
+        hintUsed()
         
         # if after getting rid of 1 wrong ans choice, there is only 1 choice left, hint button has to disappear
         logged = islogged()
@@ -441,12 +425,35 @@ def hintsa():
     # when hint button is pressed
     else:
         question= request.form.get('Question')
-        return render_template('triviasa.html', question=question)
+        
+        clue = session['correct_answer']
+        # if clue is 2 or less letters; only first letter is given; otherwise, first 2 letters is given
+        if len(clue) > 2:
+            clue = clue[0:2]
+        else:
+            clue = clue[0:1]
+            
+        # decrease num of hints in db
+        hintUsed()    
+        
+        # hint button is not longered shown; can't use mutliple hints in same SA question (unlike mc)
+        return render_template('triviasa.html', question=question, hinted=True, clue=clue)
+
+# decrease number of hints in user's table
+def hintUsed():
+    hint=getNumOfHints()
+    hint -= 1
+    db = sqlite3.connect('users.db')
+    c = db.cursor()
+    c.execute("UPDATE {name} SET Number = ? WHERE Object=?".format(name=session['username']), (hint, "Hint",))
+    db.commit()
+    db.close()
+    return 0
     
 @app.route("/profile", methods=['POST', 'GET'])
 def profile():
     
-    return render_template('profile.html', loggedIn= islogged(), numOfCollectibles= getNumOfCollectibles())
+    return render_template('profile.html', loggedIn= islogged(), numOfCollectibles= getNumOfCollectibles(), numOfHints= getNumOfHints())
     '''
     try:
         username = session['username']
