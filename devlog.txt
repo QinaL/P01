@@ -197,3 +197,9 @@ qinaL -- 2021-01-02 0:47
         - getNumOfCollection() was created to do so
     - to see collection, a link is given to send user to /collection
 - /collection and collection/html made to display all the collectibles user has gotten
+
+qinaL -- 2021-01-02 13:14
+- implemented SA hints
+    - user can press hint button on SA qu to get first 2 letters (or if ans is 2 letters or less, only the first letter)
+    - hintUsed() function created so both hint() and hintsa() can call it to decrease num of hint in db w/o repeating code
+- profile now displays num of hints user has
