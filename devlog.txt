@@ -203,3 +203,6 @@ qinaL -- 2021-01-02 13:14
     - user can press hint button on SA qu to get first 2 letters (or if ans is 2 letters or less, only the first letter)
     - hintUsed() function created so both hint() and hintsa() can call it to decrease num of hint in db w/o repeating code
 - profile now displays num of hints user has
+
+joshuaK -- 2021-01-02-16:51
+- made questions saved for user so no repeats
