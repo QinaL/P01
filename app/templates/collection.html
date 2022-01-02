@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %} Profile {% endblock %}
+
+{% block css %}
+<style>
+    img{
+        padding-top:3px;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+
+    <h1>Collection</h1>
+    <div class="container">
+      <div class="row row-cols-auto">
+        {% for collectible in collection %}
+        <div class="col">
+          <img src="{{collectible}}" class="img-fluid" style="height:150px">
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+{% endblock %}

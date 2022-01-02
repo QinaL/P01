@@ -186,7 +186,22 @@ def trivia():
         if collectible == "Error":
             return render_template('error.html')
         
-        if session['correct_answer'] == request.form['answer'] or filterSA(session['correct_answer'], request.form['answer']):
+        correct = session['correct_answer']
+        given = request.form['answer']
+        
+        print(correct)
+        
+        # for api 2; sometimes ans is in form of <i>ans</i>, cleanSA() gets rid of <> part
+        newCorrect = cleanSA(correct)
+        if correct != newCorrect:
+            session['correct_answer'] = newCorrect
+        
+        print(correct)
+        
+        print( correct==given)
+        print( filterSA(correct, given))
+        
+        if correct == given or filterSA(correct, given):
             loggedin = islogged()
             
             # puts this in session for when a non-loggedin user logins to get collectible 
@@ -283,7 +298,14 @@ def filterSA(correct, given):
     for char in removeChar:
         given = given.replace(char,"")
     
-    # some correct ans given by api are in form of <i>House</i>; this filters out the <> mess
+    return correct == given
+
+'''
+some correct ans given by api are in form of <i>House</i>; this filters out the <> mess
+not part of filterSA b/c <> mess needs to be out in session['correct_answer']
+so it doesn't appear if user gets qu wrong and correct_answer is displayed in burn.html
+'''
+def cleanSA(correct):
     substring = "<"
     if substring in correct:
         # gets rid of first three characters (<i>)
@@ -291,8 +313,7 @@ def filterSA(correct, given):
         # finds and gets rid of the behind </i>
         index = correct.find(substring)
         correct = correct[:index]
-    
-    return correct == given
+    return correct
     
     
 ''' collectible functions; for POST /trivia; returns tuples of pic, description'''
@@ -353,26 +374,6 @@ def insertCollectible():
     session.pop('collectible')
     db.commit()
     db.close()
-
-@app.route("/profile", methods=['POST', 'GET'])
-def profile():
-    try:
-        username = session['username']
-    except:
-        return render_template('profile.html', loggedIn=False)
-    collectibles = []
-    db = sqlite3.connect('users.db')
-    c = db.cursor()
-    c.execute("SELECT Object FROM {name} WHERE Type='Collectible'".format(name=username))
-    collectibles=c.fetchall()
-    i=0
-    while (i < len(collectibles)):
-        collectibles[i]=collectibles[i][0]
-        i+=1
-    db.commit()
-    db.close()
-    print(collectibles)
-    return render_template('profile.html', loggedIn=True, collection=collectibles)
 
 # for mc qus; gets rid of 1 wrong answer choice
 @app.route("/hint", methods=['POST', 'GET'])
@@ -441,7 +442,59 @@ def hintsa():
     else:
         question= request.form.get('Question')
         return render_template('triviasa.html', question=question)
-
+    
+@app.route("/profile", methods=['POST', 'GET'])
+def profile():
+    
+    return render_template('profile.html', loggedIn= islogged(), numOfCollectibles= getNumOfCollectibles())
+    '''
+    try:
+        username = session['username']
+    except:
+        return render_template('profile.html', loggedIn=False)
+    collectibles = []
+    db = sqlite3.connect('users.db')
+    c = db.cursor()
+    c.execute("SELECT Object FROM {name} WHERE Type='Collectible'".format(name=username))
+    collectibles=c.fetchall()
+    i=0
+    while (i < len(collectibles)):
+        collectibles[i]=collectibles[i][0]
+        i+=1
+    db.commit()
+    db.close()
+    print(collectibles)
+    return render_template('profile.html', loggedIn=True, collection=collectibles)
+    '''
+@app.route("/collection", methods=['POST', 'GET'])
+def collection():
+    # stops users that are not logged in from seeing collection and getting error
+    if not islogged():
+        return redirect("/profile")
+    else:
+        collectibles = []
+        db = sqlite3.connect('users.db')
+        c = db.cursor()
+        c.execute("SELECT Object FROM {name} WHERE Type='Collectible'".format(name=session['username']))
+        collectibles=c.fetchall()
+        i=0
+        while (i < len(collectibles)):
+            collectibles[i]=collectibles[i][0]
+            i+=1
+        db.commit()
+        db.close()
+        return render_template('collection.html', collection=collectibles)
+    
+def getNumOfCollectibles():
+    if islogged():
+        db = sqlite3.connect('users.db')
+        c = db.cursor()
+        c.execute("SELECT COUNT(*) FROM {name} WHERE Type=?".format(name=session['username']), ("Collectible",))
+        collectible = c.fetchone()[0] #c.fetchone gives a tuple, so [0] to get the number
+    else:
+        collectible=-1
+    return collectible
+    
 if __name__ == "__main__":
     app.debug = True
     app.run()
