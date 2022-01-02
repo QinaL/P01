@@ -188,4 +188,12 @@ qinaL -- 2021-01-01 23:46
     - api answers with <i> can be correct
         - ex: if ans by api is <i>House</i>, a user inputting house is correct
     - function filterSA() was created for this; it is called in /trivia POST
-    
+
+qinaL -- 2021-01-02 0:47
+- made it so <i> part of SA answer is gone in session['correct_answer'] so when user gets qu wrong and correct answer is displayed, the <> isn't shown
+    - put prev code that did this that was in filterSA() into new function cleanSA() 
+- changed format of profile
+    - now displays number of how many collectibles a user has
+        - getNumOfCollection() was created to do so
+    - to see collection, a link is given to send user to /collection
+- /collection and collection/html made to display all the collectibles user has gotten
