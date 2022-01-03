@@ -230,3 +230,12 @@ qinaL -- 2021-01-02 21:49
 qinaL -- 2021-01-02 21:56
 - added db to repo b/c it has an admin account w/ 98 collectibles (will be used to showcase in demo)
     - username: admin; password: 1
+    
+qinaL -- 2021-01-02 23:08
+- num of Special Collectibles is shown on profile and button now send to their specials page
+- specials page implemented
+    - /specials and specials.html created to do so
+    - there is an images folder in the static folder that holds the 3 images for the special collectibles
+    - uses bootstrap cards (i think it looks pretty neat! :D)
+    - there are 3 special collectibles, each as a reward for the 3 achievements 
+- admin account doesn't work b/c database has changed; will need new plan for this
