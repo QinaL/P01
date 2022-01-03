@@ -226,3 +226,7 @@ qinaL -- 2021-01-02 21:49
 - there are 3 achievements users can get dependent on how many collectibles they have
     - achievements page shows status of each achievements (and color of each achievement will reflect status)
     - rewards for each achievement not implemented yet
+
+qinaL -- 2021-01-02 21:55
+- added db to repo b/c it has an admin account w/ 98 collectibles (will be used to showcase in demo)
+    - username: admin; password: 1
