@@ -259,6 +259,10 @@ qinaL -- 2022-01-03 16:35 (for push 2 hrs ago)
 - profile now displays num of fire extinguishers, total qus right and wrong
     - for every 10 qus rights, user gets a hint; every 10 wrong, a fire extinguisher
         - these 2 counts are displayed on profile; actual functioning should work (but should get more testing)
-    - 4 counters added to indiv user's table
+    - 4 counters added to indiv user's table, and each counter has a function that retrieves their num
     - rightcounters() for incrementing when get qu right; wrongcounters() for incrementing when get qu wrong
 - actual functioning of fire extinguishers not implemented yet
+
+qinaL -- 2021-01-03 17:01
+- consolidated the getNumOfRightQus(), getNumOfGoalRight(), and their wrong counterparts into one function- getNumOfCounter(counter), where counter is a string that denoted which specific counter is being asked for; avoids a lot of repeating code
+- small profile front-end changes
