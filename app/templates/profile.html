@@ -3,8 +3,11 @@
 
 {% block css %}
 <style>
-    img{
-	padding-top:3px;
+    h1{
+        margin-bottom: 20px;
+    }
+    p{
+     margin-bottom: 20px;  
     }
 </style>
 {% endblock %}
@@ -20,16 +23,15 @@
 <h2>Total Questions Wrong: {{ numOfWrongQus }}</h2>
 <br>
 <h2>Hints You Have: {{ numOfHints }} </h2>
-<p> {{ goalRight }} / 10 right questions to get Hint </p>
-<br>
+<p> {{ goalRight }} / 10 right questions to get a Hint </p>
 <h2>Fire Extinguishers You Have: {{ numOfFireExtinguishers}} </h2>
-<p> {{ goalWrong }} / 10 wrong questions to get Hint </p>
-<br>
+<p> {{ goalWrong }} / 10 wrong questions to get a Fire Extinguisher </p>
 <h2>Achievements You Have: {{ numOfAchievements }} </h2>
 <a class="btn btn-secondary" href="/achievements">See All Achievements</a>
 <br><br>
 <h2>Special Collectibles You Have: {{ numOfAchievements }} </h2>
 <a class="btn btn-secondary" href="/specials">See Your Specials</a>
+<br><br>
 
 {% else %}
 <p> To start obtaining collectibles for your profile, please login or signup.</p>

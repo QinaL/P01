@@ -528,7 +528,7 @@ def hintUsed():
 @app.route("/profile", methods=['POST', 'GET'])
 def profile():
 
-    return render_template('profile.html', loggedIn= islogged(), numOfCollectibles= getNumOfCollectibles(), numOfHints= getNumOfHints(), numOfFireExtinguishers= getNumOfFireExtinguishers(), numOfAchievements = getNumOfAchievements(), numOfRightQus= getNumOfRightQus(), numOfWrongQus = getNumOfWrongQus(), goalRight = getNumOfGoalRight(), goalWrong = getNumOfGoalWrong())
+    return render_template('profile.html', loggedIn= islogged(), numOfCollectibles= getNumOfCollectibles(), numOfHints= getNumOfHints(), numOfFireExtinguishers= getNumOfFireExtinguishers(), numOfAchievements = getNumOfAchievements(), numOfRightQus= getNumOfCounter("Total Right"), numOfWrongQus = getNumOfCounter("Total Wrong"), goalRight = getNumOfCounter("Goal Right"), goalWrong = getNumOfCounter("Goal Wrong"))
     '''
     try:
         username = session['username']
@@ -624,12 +624,12 @@ def rightCounters():
     c = db.cursor()
     
     # increases total right counter by 1
-    totalRight = getNumOfRightQus()
+    totalRight = getNumOfCounter("Total Right")
     totalRight += 1
     c.execute("UPDATE {name} SET Number = ? WHERE OBJECT =?".format(name=session['username']), (totalRight, "Total Right",))
     
     # increases goal right counter by 1
-    goalRight = getNumOfGoalRight()
+    goalRight = getNumOfCounter("Goal Right")
     goalRight += 1
     # if user reaches set of 10 qus right --> gets 1 hint
     if goalRight == 10:
@@ -649,12 +649,12 @@ def wrongCounters():
     c = db.cursor()
     
     # increases total wrong counter by 1
-    totalWrong = getNumOfWrongQus()
+    totalWrong = getNumOfCounter("Total Wrong")
     totalWrong += 1
     c.execute("UPDATE {name} SET Number = ? WHERE OBJECT =?".format(name=session['username']), (totalWrong, "Total Wrong",))
     
     # increases goal wrong counter by 1
-    goalWrong = getNumOfGoalWrong()
+    goalWrong = getNumOfCounter("Goal Wrong")
     goalWrong += 1
     # if user reaches set of 10 qus wrong --> gets 1 fire extinguisher
     if goalWrong == 10:
@@ -679,6 +679,18 @@ def getNumOfFireExtinguishers():
         fe=-1
     return fe
 
+# counter is a string that denotes which counter in db is being asked for; e.g. "Total Right", "Goal Right", "Total Wrong", "Goal Wrong"
+def getNumOfCounter(counter):
+    if islogged():
+        db = sqlite3.connect('users.db')
+        c = db.cursor()
+        c.execute("SELECT Number FROM {name} WHERE Object=?".format(name=session['username']), (counter,))
+        counter = c.fetchone()[0]
+    else:
+        counter = -1
+    return counter
+
+'''
 def getNumOfRightQus():
     if islogged():
         db = sqlite3.connect('users.db')
@@ -718,6 +730,7 @@ def getNumOfGoalWrong():
     else:
         goalWrong=-1
     return goalWrong
+'''
 
 if __name__ == "__main__":
     app.debug = True
