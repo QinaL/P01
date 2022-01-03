@@ -211,3 +211,9 @@ thomasY -- 2021-01-02 18:55
 - Added a check to make sure the username is alphanumeric when registering
 - Added a htmlDecode function that deals with default encoding for questions generated from OpenTrivia
   - Only deals with "", '', &
+
+thomasY -- 2021-01-02 20:21
+- Removed htmlDecode and just made the variables safe in the templates
+  - Passes through the string without doing anything to it
+- Made all the buttons the same type
+- Added Bootstrap to login and register forms

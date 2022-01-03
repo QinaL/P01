@@ -8,14 +8,15 @@
 {% endblock %}
 
 {% block body %}
-
+<h1>Trivia</h1>
   {{question|safe}} <!-- displays questions -->
   <br><br>
   {% for i in choices %} <!-- displays choices -->
     <form action="/trivia" method="POST">
-      <input value="{{i|safe}}" type="hidden" name="answer">
-      <input type="submit" value="{{i}}">
+      <input value="{{i}}" type="hidden" name="answer">
+      <input class="btn btn-secondary" type="submit" value="{{i|safe}}">
     </form>
+    <br>
   {% endfor %}
 <br>
 
@@ -25,7 +26,7 @@ Hints You Have: {{hint}}
 <form action="/hint" method="POST">
     <input type="hidden" name="Question" value="{{question}}">
     <input type="hidden" name="Choices" value="{{choices}}">
-    <input type="submit" name="Hint Button" value="Use Hint">
+    <input class="btn btn-secondary" type="submit" name="Hint Button" value="Use Hint">
 </form>
 {% endif %}
 {% endif %}

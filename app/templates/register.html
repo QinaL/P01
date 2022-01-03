@@ -3,17 +3,42 @@
 
 {% block css %}
 <style>
-    /* insert css specific to individual page */
+    .mb-3{
+      width:300px;
+    }
+    .form-text{
+      color:#36454F;
+    }
 </style>
 {% endblock %}
 
 {% block body %}
-    Register
+    <h1>Register</h1>
     <form action="/register", method="POST">
-      <input class="credential-input" type="text" name="username" placeholder="Username"><br>
-      <input class="credential-input" type="password" name="password" placeholder="Password"><br>
-      <input class="credential-input" type="password" name="reenterpasswd" placeholder="Re-enter password"><br>
-      <input id="credential-submit" type="submit" value="Register" />
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input class="credential-input form-control" type="text" name="username" aria-describedby="usernameHelp">
+            <div id="usernameHelp" class="form-text">
+              Username should be alphanumeric
+            </div>
+          </div>
+        </div>
+        <div class="row justify-content-center">
+          <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input class="credential-input form-control" type="password" name="password">
+          </div>
+        </div>
+        <div class="row justify-content-center">
+          <div class="mb-3">
+            <label for="password" class="form-label">Re-enter Password</label>
+            <input class="credential-input form-control" type="password" name="reenterpasswd">
+          </div>
+        </div>
+      <input id="credential-submit" type="submit" class="btn btn-secondary" value="Register">
+      </div>
     </form>
 
     {{error}}

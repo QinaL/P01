@@ -10,19 +10,20 @@
 {% endblock %}
 
 {% block body %}
+<h1>Profile</h1>
 {% if loggedIn %}
 <h2>Collectibles You Have: {{ numOfCollectibles}} </h2>
-<a href="/collection">See Your Collection</a>
+<a class="btn btn-secondary" href="/collection">See Your Collection</a>
 <br>
 <h2>Hints You Have: {{ numOfHints }} </h2>
 <br>
 <h2>Fire Extinguishers You Have: {{ numOfFireExtinguishers}} </h2>
 <br>
 <h2>Achievements You Have: {{ numOfAchievements }} </h2>
-<a href="/">See All Achievements</a>
+<a class="btn btn-secondary" href="/">See All Achievements</a>
 <br>
 <h2>Special Collectibles You Have: {{ numOfSpecialCollectibles }} </h2>
-<a href="/">See Your Specials</a>
+<a class="btn btn-secondary" href="/">See Your Specials</a>
 
 {% else %}
 <p> To start obtaining collectibles for your profile, please login or signup.</p>
