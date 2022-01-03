@@ -217,3 +217,12 @@ thomasY -- 2021-01-02 20:21
   - Passes through the string without doing anything to it
 - Made all the buttons the same type
 - Added Bootstrap to login and register forms
+
+qinaL -- 2021-01-02 21:49
+- num of achivements is now shown on profile
+    - getAchievements() and getNumOfAchievements() created to do this
+- button to send user to their achievements page is implemented on profile
+    - achievements.html and /achievements created to do this
+- there are 3 achievements users can get dependent on how many collectibles they have
+    - achievements page shows status of each achievements (and color of each achievement will reflect status)
+    - rewards for each achievement not implemented yet
