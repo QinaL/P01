@@ -111,7 +111,7 @@ def register():
         #look in users.db and see if user with username and password combination exists
         db = sqlite3.connect('users.db')
         c = db.cursor()
-        c.execute("CREATE TABLE IF NOT EXISTS users(username TEXT, password TEXT, Questions TEXT, UNIQUE(username))")
+        c.execute("CREATE TABLE IF NOT EXISTS users(username TEXT, password TEXT, Questions TEXT)")
         c.execute("SELECT username AND password FROM users WHERE username=? AND password=?", (username, password))
 
         if (c.fetchone() == None): #user doesn't exist; continue with registration

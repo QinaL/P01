@@ -4,6 +4,9 @@
 {% block css %}
 <style>
     /* insert css specific to individual page */
+    input{
+     margin: 2px;   
+    }
 </style>
 {% endblock %}
 
@@ -16,7 +19,6 @@
       <input value="{{i}}" type="hidden" name="answer">
       <input class="btn btn-secondary" type="submit" value="{{i|safe}}">
     </form>
-    <br>
   {% endfor %}
 <br>
 
