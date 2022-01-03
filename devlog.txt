@@ -248,3 +248,9 @@ yayingLL -- 2022-01-03 00:58:08
 - HAPPY NEW YEAR!! don't forget it's 2022 now LOL ygs cute
 - fixed KeyError: 'Username'; was occurring because user attempts trivia without logging in (even tho our design said it should be possible)
   - no worries, try/catched the error; if error occurs, redirect to /login
+
+yayingLL -- 2022-01-03 01:47:23
+- **(Need to discuss with team) Remove ability to answer trivia qs w/o logging in?
+  - Source of many bugs, including the KeyError and 'Response' object not Subscriptable bug
+- Fixed KeyError and Subscriptable bug with if statements; if session username not set (user not logged in),
+then redirect user to login page

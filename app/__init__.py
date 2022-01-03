@@ -151,7 +151,11 @@ def trivia():
             triviaInfo = triviaApi1()
         # trivia api 2 does not have own function b/c it uses diff template and it is short-answer while api 0 and 1 are multiple choice
         else:
-            # try except in case api fails
+            #KeyError: 'Username' arises sometimes; if session username is not set... (check for SA --> API 2)
+            if session.get('username') == None:
+                return redirect("/login") #redirect user to login page
+
+            # try except in case trivia api 2 fails
             try:
                 http = urllib.request.urlopen("https://jservice.io/api/random")
                 questions = json.load(http)
@@ -167,6 +171,11 @@ def trivia():
         # if api fails, error page shown; else mc qus are rendered
         if triviaInfo == "Error":
             return render_template('error.html')
+        elif triviaInfo == "KeyError": #if session username is not set... (check for MCQs --> API 0&1)
+            return redirect("/login") #redirect user to login page so they can set it (by logging in)
+
+        print("~~~~~~~~~~")
+        print(triviaInfo)
         return render_template('trivia.html', question=triviaInfo[0], choices=triviaInfo[1], logged=islogged(), hint=getNumOfHints())
 
     #POST
@@ -223,7 +232,7 @@ def triviaApi0():
         #questions is a list of dictionaries; each dictionary entry is a question + answers + info
         questions = json.load(http)
     except:
-        return "API is being a lil wonkadookle today... Please try again later"
+        return "Error"
 
     print(questions)
 
@@ -232,11 +241,14 @@ def triviaApi0():
         question = value.get('question') #store the value of the key 'question'; is a string
         db = sqlite3.connect("users.db")
         c = db.cursor()
-        #KeyError: 'Username' arises sometimes; try to execute command...
-        try:
-            c.execute("SELECT Questions FROM users WHERE username=?", (session['username'],))
-        except: #if error occurs, direct user to /login (so they can enter username into session)
-            return redirect("/login")
+
+        #KeyError: 'Username' arises sometimes; if there is no session username...
+        print("bbbbbb")
+        print(session.get('username'))
+        if session.get('username') == None:
+            return "KeyError" #return error name so trivia() can redirect user to login page
+
+        c.execute("SELECT Questions FROM users WHERE username=?", (session['username'],))
         d = c.fetchone()[0]
         if d != None:
             insert = d + question
@@ -287,12 +299,11 @@ def triviaApi1():
     db = sqlite3.connect("users.db")
     c = db.cursor()
 
-    #KeyError: 'Username' arises sometimes; try to execute command...
-    try:
-        c.execute("SELECT Questions FROM users WHERE username=?", (session['username'],))
-    except: #if error occurs, direct user to /login (so they can enter username into session)
-        return redirect("/login")
+    #KeyError: 'Username' arises sometimes; if there is no session username...
+    if session.get('username') == None:
+        return "KeyError" #return error name so trivia() can redirect user to login page
 
+    c.execute("SELECT Questions FROM users WHERE username=?", (session['username'],))
     d = c.fetchone()[0]
     if question in d:
         return triviaApi1()
