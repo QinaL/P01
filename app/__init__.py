@@ -120,8 +120,20 @@ def register():
             c.execute(table)
 
             #preload hints and fire extinguishers in each user; default 2 each
-            #FIX UP SO INCLUDES ? ? ?
             c.execute("INSERT INTO {name}(Type, Object, Number) VALUES('Item', 'Hint', 2)".format(name=username))
+            c.execute("INSERT INTO {name}(Type, Object, Number) VALUES('Item', 'Fire Extinguisher', 2)".format(name=username))
+            '''
+            preload counters into tables
+            used so users can gain hints and fire extinguishers
+                - every 10 qus rights = 1 hint
+                - every 10 qus wrong = 1 fire extinguisher
+            total is total number of qus user got right/wrong over their entire usage
+            goal is of this set of 10, how close is user to getting hint/fire extinguisher
+            '''
+            c.execute("INSERT INTO {name}(Type, Object, Number) VALUES('Counter', 'Total Right', 0)".format(name=username))
+            c.execute("INSERT INTO {name}(Type, Object, Number) VALUES('Counter', 'Goal Right', 0)".format(name=username))
+            c.execute("INSERT INTO {name}(Type, Object, Number) VALUES('Counter', 'Total Wrong', 0)".format(name=username))
+            c.execute("INSERT INTO {name}(Type, Object, Number) VALUES('Counter', 'Goal Wrong', 0)".format(name=username))
 
         else: #error: username already taken
             return render_template("register.html", error="Username taken already")
@@ -207,18 +219,24 @@ def trivia():
 
         correct = session['correct_answer']
         given = request.form['answer']
+        loggedin = islogged()
         if correct == given or filterSA(correct, given):
-            loggedin = islogged()
-
+            
             # puts this in session for when a non-loggedin user logins to get collectible
             session['collectible'] = collectible[0]
 
             # if user is logged in, collectible info gets added to their database
             if loggedin:
+                # logged in user gets right counters increased 
+                rightCounters()
+                
                 insertCollectible()
                 return render_template('collectibles.html', loggedin = loggedin, picture=collectible[0], description = collectible[1])
             return render_template('collectibles.html', loggedin = loggedin, picture=collectible[0], description = collectible[1])
         else:
+            if loggedin:
+                # logged in user gets wrong counters increased
+                wrongCounters()
             return render_template('burn.html', picture=collectible[0], description = collectible[1])
 
 ''' api trivia functions (only 0 and 1, api 2 has diff format); for GET /trivia; return tuples of question, answer choices '''
@@ -510,7 +528,7 @@ def hintUsed():
 @app.route("/profile", methods=['POST', 'GET'])
 def profile():
 
-    return render_template('profile.html', loggedIn= islogged(), numOfCollectibles= getNumOfCollectibles(), numOfHints= getNumOfHints(), numOfAchievements = getNumOfAchievements())
+    return render_template('profile.html', loggedIn= islogged(), numOfCollectibles= getNumOfCollectibles(), numOfHints= getNumOfHints(), numOfFireExtinguishers= getNumOfFireExtinguishers(), numOfAchievements = getNumOfAchievements(), numOfRightQus= getNumOfRightQus(), numOfWrongQus = getNumOfWrongQus(), goalRight = getNumOfGoalRight(), goalWrong = getNumOfGoalWrong())
     '''
     try:
         username = session['username']
@@ -600,6 +618,106 @@ def getNumOfAchievements():
     else:
         count=-1
     return count
+    
+def rightCounters():
+    db = sqlite3.connect('users.db')
+    c = db.cursor()
+    
+    # increases total right counter by 1
+    totalRight = getNumOfRightQus()
+    totalRight += 1
+    c.execute("UPDATE {name} SET Number = ? WHERE OBJECT =?".format(name=session['username']), (totalRight, "Total Right",))
+    
+    # increases goal right counter by 1
+    goalRight = getNumOfGoalRight()
+    goalRight += 1
+    # if user reaches set of 10 qus right --> gets 1 hint
+    if goalRight == 10:
+        # increases num of hint in db
+        hint=getNumOfHints()
+        hint += 1
+        c.execute("UPDATE {name} SET Number = ? WHERE Object=?".format(name=session['username']), (hint, "Hint",))
+        # reset this set of right qus
+        goalRight = 0
+    c.execute("UPDATE {name} SET Number = ? WHERE OBJECT =?".format(name=session['username']), (goalRight, "Goal Right",))
+    db.commit()
+    db.close()
+    return 0
+    
+def wrongCounters():
+    db = sqlite3.connect('users.db')
+    c = db.cursor()
+    
+    # increases total wrong counter by 1
+    totalWrong = getNumOfWrongQus()
+    totalWrong += 1
+    c.execute("UPDATE {name} SET Number = ? WHERE OBJECT =?".format(name=session['username']), (totalWrong, "Total Wrong",))
+    
+    # increases goal wrong counter by 1
+    goalWrong = getNumOfGoalWrong()
+    goalWrong += 1
+    # if user reaches set of 10 qus wrong --> gets 1 fire extinguisher
+    if goalWrong == 10:
+        # increases num of fire extinguisher in db
+        fe=getNumOfFireExtinguishers()
+        fe += 1
+        c.execute("UPDATE {name} SET Number = ? WHERE Object=?".format(name=session['username']), (fe, "Fire Extinguisher",))
+        # reset this set of wrong qus
+        goalWrong = 0
+    c.execute("UPDATE {name} SET Number = ? WHERE OBJECT =?".format(name=session['username']), (goalWrong, "Goal Wrong",))
+    db.commit()
+    db.close()
+    return 0
+
+def getNumOfFireExtinguishers():
+    if islogged():
+        db = sqlite3.connect('users.db')
+        c = db.cursor()
+        c.execute("SELECT Number FROM {name} WHERE Object=?".format(name=session['username']), ("Fire Extinguisher",))
+        fe = c.fetchone()[0] #c.fetchone gives a tuple, so [0] to get the number
+    else:
+        fe=-1
+    return fe
+
+def getNumOfRightQus():
+    if islogged():
+        db = sqlite3.connect('users.db')
+        c = db.cursor()
+        c.execute("SELECT Number FROM {name} WHERE Object=?".format(name=session['username']), ("Total Right",))
+        totalRight = c.fetchone()[0] #c.fetchone gives a tuple, so [0] to get the number
+    else:
+        totalRight=-1
+    return totalRight
+
+def getNumOfGoalRight():
+    if islogged():
+        db = sqlite3.connect('users.db')
+        c = db.cursor()
+        c.execute("SELECT Number FROM {name} WHERE Object=?".format(name=session['username']), ("Goal Right",))
+        goalRight = c.fetchone()[0] #c.fetchone gives a tuple, so [0] to get the number
+    else:
+        goalRight=-1
+    return goalRight
+
+def getNumOfWrongQus():
+    if islogged():
+        db = sqlite3.connect('users.db')
+        c = db.cursor()
+        c.execute("SELECT Number FROM {name} WHERE Object=?".format(name=session['username']), ("Total Wrong",))
+        totalWrong = c.fetchone()[0] #c.fetchone gives a tuple, so [0] to get the number
+    else:
+        totalWrong=-1
+    return totalWrong
+
+def getNumOfGoalWrong():
+    if islogged():
+        db = sqlite3.connect('users.db')
+        c = db.cursor()
+        c.execute("SELECT Number FROM {name} WHERE Object=?".format(name=session['username']), ("Goal Wrong",))
+        goalWrong = c.fetchone()[0] #c.fetchone gives a tuple, so [0] to get the number
+    else:
+        goalWrong=-1
+    return goalWrong
 
 if __name__ == "__main__":
     app.debug = True
