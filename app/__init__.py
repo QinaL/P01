@@ -223,7 +223,7 @@ def triviaApi0():
         #questions is a list of dictionaries; each dictionary entry is a question + answers + info
         questions = json.load(http)
     except:
-        return "Error"
+        return "API is being a lil wonkadookle today... Please try again later"
 
     print(questions)
 
@@ -232,7 +232,11 @@ def triviaApi0():
         question = value.get('question') #store the value of the key 'question'; is a string
         db = sqlite3.connect("users.db")
         c = db.cursor()
-        c.execute("SELECT Questions FROM users WHERE username=?", (session['username'],))
+        #KeyError: 'Username' arises sometimes; try to execute command...
+        try:
+            c.execute("SELECT Questions FROM users WHERE username=?", (session['username'],))
+        except: #if error occurs, direct user to /login (so they can enter username into session)
+            return redirect("/login")
         d = c.fetchone()[0]
         if d != None:
             insert = d + question
@@ -279,10 +283,16 @@ def triviaApi1():
     #processes info
     session['correct_answer'] = questions['results'][0]['correct_answer']
     question= questions['results'][0]['question']
-    
+
     db = sqlite3.connect("users.db")
     c = db.cursor()
-    c.execute("SELECT Questions FROM users WHERE username=?", (session['username'],))
+
+    #KeyError: 'Username' arises sometimes; try to execute command...
+    try:
+        c.execute("SELECT Questions FROM users WHERE username=?", (session['username'],))
+    except: #if error occurs, direct user to /login (so they can enter username into session)
+        return redirect("/login")
+
     d = c.fetchone()[0]
     if question in d:
         return triviaApi1()
@@ -514,7 +524,7 @@ def profile():
     print(collectibles)
     return render_template('profile.html', loggedIn=True, collection=collectibles)
     '''
-    
+
 @app.route("/collection", methods=['POST', 'GET'])
 def collection():
     # stops users that are not logged in from seeing collection and getting error
@@ -533,7 +543,7 @@ def collection():
         db.commit()
         db.close()
         return render_template('collection.html', collection=collectibles)
-    
+
 @app.route("/achievements", methods=['POST', 'GET'])
 def achievements():
     if not islogged():
@@ -549,7 +559,7 @@ def specials():
     else:
         achievements = getAchievements()
         return render_template('specials.html', first= achievements[0], master= achievements[1], god= achievements[2])
-    
+
 def getNumOfCollectibles():
     if islogged():
         db = sqlite3.connect('users.db')
@@ -567,8 +577,8 @@ def getAchievements():
     trivia god: 100 collectibles
     '''
     achievements= [False, False, False]
-    if islogged(): 
-        collectible= getNumOfCollectibles() 
+    if islogged():
+        collectible= getNumOfCollectibles()
         achievements[0] = collectible > 0
         achievements[1] = collectible > 49
         achievements[2] = collectible > 99
