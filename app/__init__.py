@@ -279,6 +279,7 @@ def triviaApi1():
     #processes info
     session['correct_answer'] = questions['results'][0]['correct_answer']
     question= questions['results'][0]['question']
+    
     db = sqlite3.connect("users.db")
     c = db.cursor()
     c.execute("SELECT Questions FROM users WHERE username=?", (session['username'],))
@@ -493,7 +494,7 @@ def hintUsed():
 @app.route("/profile", methods=['POST', 'GET'])
 def profile():
 
-    return render_template('profile.html', loggedIn= islogged(), numOfCollectibles= getNumOfCollectibles(), numOfHints= getNumOfHints())
+    return render_template('profile.html', loggedIn= islogged(), numOfCollectibles= getNumOfCollectibles(), numOfHints= getNumOfHints(), numOfAchievements = getNumOfAchievements())
     '''
     try:
         username = session['username']
@@ -513,6 +514,7 @@ def profile():
     print(collectibles)
     return render_template('profile.html', loggedIn=True, collection=collectibles)
     '''
+    
 @app.route("/collection", methods=['POST', 'GET'])
 def collection():
     # stops users that are not logged in from seeing collection and getting error
@@ -531,7 +533,15 @@ def collection():
         db.commit()
         db.close()
         return render_template('collection.html', collection=collectibles)
-
+    
+@app.route("/achievements", methods=['POST', 'GET'])
+def achievements():
+    if not islogged():
+        return redirect("/profile")
+    else:
+        achievements = getAchievements()
+        return render_template('achievements.html', first= achievements[0], master= achievements[1], god= achievements[2])
+    
 def getNumOfCollectibles():
     if islogged():
         db = sqlite3.connect('users.db')
@@ -541,6 +551,31 @@ def getNumOfCollectibles():
     else:
         collectible=-1
     return collectible
+
+def getAchievements():
+    '''
+    first touch achievement: at least one collectible
+    master: 50 collectibles
+    trivia god: 100 collectibles
+    '''
+    achievements= [False, False, False]
+    if islogged(): 
+        collectible= getNumOfCollectibles() 
+        achievements[0] = collectible > 0
+        achievements[1] = collectible > 49
+        achievements[2] = collectible > 99
+    return achievements
+
+def getNumOfAchievements():
+    if islogged():
+        count = 0;
+        achievements = getAchievements()
+        for status in achievements:
+            if status:
+                count += 1
+    else:
+        count=-1
+    return count
 
 if __name__ == "__main__":
     app.debug = True

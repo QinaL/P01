@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %} Profile {% endblock %}
+
+{% block css %}
+<!-- color for first achievement -->
+{% if first %}
+<style>
+    .first{
+        color: black;
+        background-color: pink;
+    }
+</style>
+{% else %}
+<style>
+    .first{
+        color: grey;
+        background-color: lightgray;
+    }
+</style>
+{% endif %}
+<!-- color for master -->
+{% if master %}
+<style>
+    .master{
+        color: black;
+        background-color: pink;
+    }
+</style>
+{% else %}
+<style>
+    .master{
+        color: grey;
+        background-color: lightgray;
+    }
+</style>
+{% endif %}
+<!-- color for god -->
+{% if god %}
+<style>
+    .god{
+        color: black;
+        background-color: pink;
+    }
+</style>
+{% else %}
+<style>
+    .god{
+        color: grey;
+        background-color: lightgray;
+    }
+</style>
+{% endif %}
+
+{% endblock %}
+
+{% block body %}
+<h1>Achievements</h1>
+<br>
+<div class="first">
+    <h2> First Touch </h2>
+    <p> Get Your First Collectible </p>
+    <p> Status: {% if first %} Achieved {% else %} Not Achieved {% endif %}</p>
+</div>
+<br>
+<div class="master">
+    <h2> Mastery </h2>
+    <p> Get 50 Collectibles </p>
+    <p> Status: {% if master %} Achieved {% else %} Not Achieved {% endif %} </p>
+</div>
+<br>
+<div class="god">
+    <h2> Trivia God </h2>
+    <p> Get 100 Collectibles </p>
+    <p> Status: {% if god %} Achieved {% else %} Not Achieved {% endif %} </p>
+</div>
+
+{% endblock %}
