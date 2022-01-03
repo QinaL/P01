@@ -245,23 +245,20 @@ def triviaApi0():
         #KeyError: 'Username' arises sometimes; if there is no session username...
         print("bbbbbb")
         print(session.get('username'))
-        if session.get('username') == None:
-            return "KeyError" #return error name so trivia() can redirect user to login page
-
-        c.execute("SELECT Questions FROM users WHERE username=?", (session['username'],))
-        d = c.fetchone()[0]
-        if d != None:
-            insert = d + question
-        else:
-            insert = question
-        c.execute("UPDATE users SET Questions=? WHERE username=?", (insert, session['username']))
-        c.execute("SELECT Questions FROM users WHERE username=?", (session['username'],))
-        if question in c.fetchone()[0]:
+        if session.get('username') != None:
+            c.execute("SELECT Questions FROM users WHERE username=?", (session['username'],))
+            d = c.fetchone()[0]
+            if question in d:
+                return triviaApi1()
+            if d != None:
+                insert = d + question
+            else:
+                insert = question
+            print(insert)
+            c.execute("UPDATE users SET Questions=? WHERE username=?", (insert, session['username']))
+            c.execute("SELECT Questions FROM users WHERE username=?", (session['username'],))
             db.commit()
             db.close()
-            print("VERY POG WORKS")
-        else:
-            print("BRAIN TINY")
         session['correct_answer'] = value.get('correctAnswer') #is a string
         incorrect_answers = value.get('incorrectAnswers') #is a list of strings
     #add correct answer so incorrect_answer has all possible answer choices
@@ -300,22 +297,20 @@ def triviaApi1():
     c = db.cursor()
 
     #KeyError: 'Username' arises sometimes; if there is no session username...
-    if session.get('username') == None:
-        return "KeyError" #return error name so trivia() can redirect user to login page
-
-    c.execute("SELECT Questions FROM users WHERE username=?", (session['username'],))
-    d = c.fetchone()[0]
-    if question in d:
-        return triviaApi1()
-    if d != None:
-        insert = d + question
-    else:
-        insert = question
-    print(insert)
-    c.execute("UPDATE users SET Questions=? WHERE username=?", (insert, session['username']))
-    c.execute("SELECT Questions FROM users WHERE username=?", (session['username'],))
-    db.commit()
-    db.close()
+    if session.get('username') != None:
+        c.execute("SELECT Questions FROM users WHERE username=?", (session['username'],))
+        d = c.fetchone()[0]
+        if question in d:
+            return triviaApi1()
+        if d != None:
+            insert = d + question
+        else:
+            insert = question
+        print(insert)
+        c.execute("UPDATE users SET Questions=? WHERE username=?", (insert, session['username']))
+        c.execute("SELECT Questions FROM users WHERE username=?", (session['username'],))
+        db.commit()
+        db.close()
 
     incorrectAnswers = [] #list for containing all the other answer choices
     for value in questions['results'][0]['incorrect_answers']:
