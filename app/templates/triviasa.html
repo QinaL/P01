@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block body %}
-  {{question}} <!-- displays questions -->
+  {{question|safe}} <!-- displays questions -->
   <br><br>
     <form action="/trivia" method="POST">
         {% if hinted %}
@@ -20,13 +20,13 @@
     </form>
 <br>
 {% if logged %}
-Hints You Have: {{hint}} 
+Hints You Have: {{hint}}
 {% if hint > 0 %}
 <form action="/hintSA" method="POST">
     <input type="hidden" name="Question" value="{{question}}">
     <input type="submit" name="Hint Button" value="Use Hint">
 </form>
 {% endif %}
-{% endif %} 
+{% endif %}
 
 {% endblock %}

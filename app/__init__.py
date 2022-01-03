@@ -129,7 +129,7 @@ def register():
         db.close()
         return redirect("/login")
     else:
-        return render_template("register.html")
+        return render_template("register.html", test='&quot')
 
 def userCheck(username):
     '''Checks if the username is only alphanumeric characters'''
@@ -277,8 +277,8 @@ def triviaApi1():
     print(questions['results'][0])
 
     #processes info
-    session['correct_answer'] = htmlDecode(questions['results'][0]['correct_answer'])
-    question= htmlDecode(questions['results'][0]['question'])
+    session['correct_answer'] = questions['results'][0]['correct_answer']
+    question= questions['results'][0]['question']
     db = sqlite3.connect("users.db")
     c = db.cursor()
     c.execute("SELECT Questions FROM users WHERE username=?", (session['username'],))
@@ -297,7 +297,7 @@ def triviaApi1():
 
     incorrectAnswers = [] #list for containing all the other answer choices
     for value in questions['results'][0]['incorrect_answers']:
-        incorrectAnswers.append(htmlDecode(value))
+        incorrectAnswers.append(value)
     #add correct answer so incorrectAnswer has all possible answer choices
     incorrectAnswers.append(session['correct_answer'])
     #randomize order answer choices appear
@@ -308,17 +308,6 @@ def triviaApi1():
 
     triviaInfo=(question, incorrectAnswers)
     return triviaInfo
-
-def htmlDecode(str):
-    '''Decodes string from HTML encoding'''
-    codes={
-        "&quot;":'"',
-        "&#039;":"'",
-        "&amp;":"&",
-    }
-    for key in codes:
-        str = str.replace(key, codes[key])
-    return str
 
 '''
 for trivia api 2

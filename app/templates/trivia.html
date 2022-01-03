@@ -9,18 +9,18 @@
 
 {% block body %}
 
-  {{question}} <!-- displays questions -->
+  {{question|safe}} <!-- displays questions -->
   <br><br>
   {% for i in choices %} <!-- displays choices -->
     <form action="/trivia" method="POST">
-      <input value="{{i}}" type="hidden" name="answer">
+      <input value="{{i|safe}}" type="hidden" name="answer">
       <input type="submit" value="{{i}}">
     </form>
   {% endfor %}
 <br>
 
 {% if logged %}
-Hints You Have: {{hint}} 
+Hints You Have: {{hint}}
 {% if hint > 0 %}
 <form action="/hint" method="POST">
     <input type="hidden" name="Question" value="{{question}}">
