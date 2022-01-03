@@ -199,7 +199,7 @@ qinaL -- 2021-01-02 0:47
 - /collection and collection.html made to display all the collectibles user has gotten
 
 qinaL -- 2021-01-02 13:14
-- implemented SA hints
+- implemented Short Answer hints
     - user can press hint button on SA qu to get first 2 letters (or if ans is 2 letters or less, only the first letter)
     - hintUsed() function created so both hint() and hintsa() can call it to decrease num of hint in db w/o repeating code
 - profile now displays num of hints user has
@@ -230,16 +230,21 @@ qinaL -- 2021-01-02 21:49
 qinaL -- 2021-01-02 21:56
 - added db to repo b/c it has an admin account w/ 98 collectibles (will be used to showcase in demo)
     - username: admin; password: 1
-    
+
 qinaL -- 2021-01-02 23:08
 - num of Special Collectibles is shown on profile and button now send to their specials page
 - specials page implemented
     - /specials and specials.html created to do so
     - there is an images folder in the static folder that holds the 3 images for the special collectibles
     - uses bootstrap cards (i think it looks pretty neat! :D)
-    - there are 3 special collectibles, each as a reward for the 3 achievements 
+    - there are 3 special collectibles, each as a reward for the 3 achievements
 - admin account doesn't work b/c database has changed; will need new plan for this
 
 qinaL -- 2021
 - there was an error with registering cuz of a missing ); fixed it
 - in trivia.html, got rid of <br> and instead gave buttons a margin of 3px b/c it makes the spacing better
+
+yayingLL -- 2022-01-03 00:58:08
+- HAPPY NEW YEAR!! don't forget it's 2022 now LOL ygs cute
+- fixed KeyError: 'Username'; was occurring because user attempts trivia without logging in (even tho our design said it should be possible)
+  - no worries, try/catched the error; if error occurs, redirect to /login
