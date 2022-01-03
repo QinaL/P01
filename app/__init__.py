@@ -541,6 +541,14 @@ def achievements():
     else:
         achievements = getAchievements()
         return render_template('achievements.html', first= achievements[0], master= achievements[1], god= achievements[2])
+
+@app.route("/specials", methods=['POST', 'GET'])
+def specials():
+    if not islogged():
+        return redirect("/profile")
+    else:
+        achievements = getAchievements()
+        return render_template('specials.html', first= achievements[0], master= achievements[1], god= achievements[2])
     
 def getNumOfCollectibles():
     if islogged():

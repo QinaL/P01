@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %} Profile {% endblock %}
+
+{% block css %}
+<style>
+    .card{
+        background-color: #ffe482;
+        margin: 5px;
+    }
+    h3 {
+        margin: 7px;
+    }
+    p{
+        margin: 5px;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<h1>Special Collectibles</h1> 
+<br>
+
+<!-- each special collectible image is a card; there is bootstrap grid w/ row and col-4 to make the 3 cards fit into 1 row -->
+<div class= "row">
+    <div class="col-4">
+<div class="card">
+    <div class="card-header">
+        AnimalsOnFire
+    </div>
+    <div class="card-body">
+        {% if first %}
+        <img class="card-img" src="../static/images/flag.jpg">
+        <p class="card-text"> This is the Devo Team (AnimalsOnFire)'s Flag, an image of their favorite animals on fire </p>
+        <p class="card-text"> Reward for First Touch Achievement </p>
+        {% else %}
+        <h3 class="card-text"> Achieve First Touch To Receive This Collectible </h3>
+        {% endif %}
+    </div>
+</div>
+        </div>
+        <div class="col-4">
+<div class="card">
+    <div class="card-header">
+        Penguin On Fire
+    </div>
+    <div class="card-body">
+        {% if master %}
+        <img class="card-img" src="../static/images/penguin.png">
+        <p class="card-text"> Joshua hates penguins. He really likes this image. All complaints go to Joshua. </p>
+        <p class="card-text"> Reward for Mastery Achievement </p>
+        {% else %}
+        <h3 class="card-text"> Achieve Mastery To Receive This Collectible </h3>
+        {% endif %}
+    </div>
+</div>
+            </div>
+            <div class="col-4">
+<div class="card">
+    <div class="card-header">
+        Ugliest Color
+    </div>
+    <div class="card-body">
+        {% if god %}
+        <img class="card-img" src="../static/images/color.jpeg">
+        <p class="card-text"> This is Pantone 448 C. It is known as the ugliest color. It is also Joshua's favorite color.</p>
+        <p class="card-text"> Reward for Trivia God Achievement </p>
+        {% else %}
+        <h3 class="card-text"> Achieve Trivia God To Receive This Collectible </h3>
+        {% endif %}
+    </div>
+</div>
+                </div>
+
+</div>
+<!-- no card format
+<h2> AnimalsOnFire </h2> <br>
+<img class="card-img" src="../static/images/flag.jpg" class="img-fluid"> <br>
+<p>This is the Devo Team (AnimalsOnFire)'s Flag, an image of their favorite animals on fire</p>
+<p>Reward for First Touch Achievement</p>
+<br><br>
+<h2> Penguin On Fire </h2> <br>
+<img class="card-img" src="../static/images/penguin.png" class="img-fluid"> <br>
+<p>Joshua hates penguins. He really likes this image. All complaints go to Joshua.</p>
+<p>Reward for Mastery Achievement</p>
+<br><br>
+<h2> Ugliest Color </h2> <br>
+<img class="card-img" src="../static/images/color.jpeg" class="img-fluid"> <br>
+<p>This is Pantone 448 C. It is known as the ugliest color. It is also Joshua's favorite color.</p>
+<p>Reward for Trivia God Achievement</p>
+<br><br>
+-->
+{% endblock %}

@@ -14,16 +14,16 @@
 {% if loggedIn %}
 <h2>Collectibles You Have: {{ numOfCollectibles}} </h2>
 <a class="btn btn-secondary" href="/collection">See Your Collection</a>
-<br>
+<br><br>
 <h2>Hints You Have: {{ numOfHints }} </h2>
 <br>
 <h2>Fire Extinguishers You Have: {{ numOfFireExtinguishers}} </h2>
 <br>
 <h2>Achievements You Have: {{ numOfAchievements }} </h2>
 <a class="btn btn-secondary" href="/achievements">See All Achievements</a>
-<br>
-<h2>Special Collectibles You Have: {{ numOfSpecialCollectibles }} </h2>
-<a class="btn btn-secondary" href="/">See Your Specials</a>
+<br><br>
+<h2>Special Collectibles You Have: {{ numOfAchievements }} </h2>
+<a class="btn btn-secondary" href="/specials">See Your Specials</a>
 
 {% else %}
 <p> To start obtaining collectibles for your profile, please login or signup.</p>
