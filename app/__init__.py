@@ -248,7 +248,7 @@ def triviaApi0():
         if session.get('username') != None:
             c.execute("SELECT Questions FROM users WHERE username=?", (session['username'],))
             d = c.fetchone()[0]
-            if question in d:
+            if d != None and question in d:
                 return triviaApi1()
             if d != None:
                 insert = d + question
