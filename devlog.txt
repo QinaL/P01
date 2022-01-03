@@ -239,3 +239,7 @@ qinaL -- 2021-01-02 23:08
     - uses bootstrap cards (i think it looks pretty neat! :D)
     - there are 3 special collectibles, each as a reward for the 3 achievements 
 - admin account doesn't work b/c database has changed; will need new plan for this
+
+qinaL -- 2021
+- there was an error with registering cuz of a missing ); fixed it
+- in trivia.html, got rid of <br> and instead gave buttons a margin of 3px b/c it makes the spacing better
