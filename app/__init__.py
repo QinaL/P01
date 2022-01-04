@@ -242,7 +242,7 @@ def trivia():
                 if loggedin:
                     # logged in user gets wrong counters increased
                     wrongCounters()
-                return render_template('burn.html', picture=collectible[0], description = collectible[1])
+                return render_template('burn.html', picture=collectible[0], description = collectible[1], correct=correct)
 
         #session has no correct_answer stored
         else:
@@ -271,7 +271,7 @@ def triviaApi0():
         #KeyError: 'Username' arises sometimes; if there is a session username...
         if session.get('username') != None:
             c.execute("SELECT Object FROM {user} WHERE Object=?".format(user=session['username']), (question,))
-            if c.fetchone()[0] != None:
+            if c.fetchone() != None:
                 return triviaApi0()
             c.execute("INSERT INTO {user}(Type, Object) VALUES('Question', ?)".format(user=session['username']), (question,))
             db.commit()
@@ -316,7 +316,7 @@ def triviaApi1():
     #KeyError: 'Username' arises sometimes; if there is a session username...
     if session.get('username') != None:
         c.execute("SELECT Object FROM {user} WHERE Object=?".format(user=session['username']), (question,))
-        if c.fetchone()[0] != None:
+        if c.fetchone() != None:
             return triviaApi1()
         c.execute("INSERT INTO {user}(Type, Object) VALUES('Question', ?)".format(user=session['username']), (question,))
         db.commit()
@@ -382,10 +382,20 @@ def axolotl():
         http = urllib.request.urlopen("https://axoltlapi.herokuapp.com/")
         axolotl_dict = json.load(http) #axolotl_dict is a dictionary; holds key-value pairs
         print(axolotl_dict['url'])
-        while "i.imgur" in axolotl_dict['url']:
-            print("cringe imgur cleansed")
-            http = urllib.request.urlopen("https://axoltlapi.herokuapp.com/")
-            axolotl_dict = json.load(http)
+        if session.get("username") != None:
+            db = sqlite3.connect("users.db")
+            c = db.cursor()
+            c.execute("SELECT * FROM {user} WHERE Object=?".format(user=session['username']), (axolotl_dict['url'],))
+            while "i.imgur" in axolotl_dict['url'] or c.fetchone() != None:
+                print("cringe imgur cleansed")
+                http = urllib.request.urlopen("https://axoltlapi.herokuapp.com/")
+                axolotl_dict = json.load(http)
+                c.execute("SELECT * FROM {user} WHERE Object=?".format(user=session['username']), (axolotl_dict['url'],))
+        else:
+            while "i.imgur" in axolotl_dict['url']:
+                print("cringe imgur cleansed")
+                http = urllib.request.urlopen("https://axoltlapi.herokuapp.com/")
+                axolotl_dict = json.load(http)
     except:
         return "Error"
 
@@ -400,6 +410,14 @@ def dog():
     try:
         http = urllib.request.urlopen("https://dog.ceo/api/breeds/image/random")
         dog_dict = json.load(http) #dog_dict is a dictionary; holds key-value pairs
+        if session.get("username") != None:
+            db = sqlite3.connect("users.db")
+            c = db.cursor()
+            c.execute("SELECT * FROM {user} WHERE Object=?".format(user=session['username']), (dog_dict['message'],))
+            while c.fetchone() != None:
+                http = urllib.request.urlopen("https://dog.ceo/api/breeds/image/random")
+                axolotl_dict = json.load(http)
+                c.execute("SELECT * FROM {user} WHERE Object=?".format(user=session['username']), (dog_dict['message'],))
     except:
         return "Error"
 
@@ -414,6 +432,14 @@ def cat():
     try:
         http = urllib.request.urlopen("https://api.thecatapi.com/v1/images/search")
         cat_dict = json.load(http)[0] #cat_dict is a dictionary; holds key-value pairs
+        if session.get("username") != None:
+            db = sqlite3.connect("users.db")
+            c = db.cursor()
+            c.execute("SELECT * FROM {user} WHERE Object=?".format(user=session['username']), (cat_dict['url'],))
+            while c.fetchone() != None:
+                http = urllib.request.urlopen("https://api.thecatapi.com/v1/images/search")
+                axolotl_dict = json.load(http)
+                c.execute("SELECT * FROM {user} WHERE Object=?".format(user=session['username']), (cat_dict['url'],))
     except:
         return "Error"
 

@@ -278,3 +278,7 @@ yayingLL -- 2022-01-04 00:53:23
 
 joshuaK -- 2022-01-04 1:03
 - changed repeat to go in other table
+
+joshuaK -- 2022-01-04 9:16
+- Fixed displaying correct answer if wrong
+- no repeat collectibles
