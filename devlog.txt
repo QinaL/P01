@@ -250,7 +250,7 @@ yayingLL -- 2022-01-03 00:58:08
   - no worries, try/catched the error; if error occurs, redirect to /login
 
 yayingLL -- 2022-01-03 01:47:23
-- **(Need to discuss with team) Remove ability to answer trivia qs w/o logging in?
+- **(Need to discuss with team) Remove ability to answer trivia qs w/o logging in? ==> Decision: don't remove, fix
   - Source of many bugs, including the KeyError and 'Response' object not Subscriptable bug
 - Fixed KeyError and Subscriptable bug with if statements; if session username not set (user not logged in),
 then redirect user to login page
@@ -270,5 +270,11 @@ qinaL -- 2021-01-03 17:01
 thomasY -- 2022-01-03 21:28
 - Created the function letterFirst to check if the first char of the username is a letter
   - SQLite3 tables cannot have a number first for its name
+
+yayingLL -- 2022-01-04 00:53:23
+- fixed how user can gain a new collectible by simply refreshing gain page
+  - redirect user back to more trivia questions instead
+
 joshuaK -- 2022-01-04 1:03
 - changed repeat to go in other table
+
