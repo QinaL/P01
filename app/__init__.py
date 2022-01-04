@@ -186,59 +186,67 @@ def trivia():
         if triviaInfo == "Error":
             return render_template('error.html')
 
-        print("~~~~~~~~~~")
-        print(triviaInfo)
         return render_template('trivia.html', question=triviaInfo[0], choices=triviaInfo[1], logged=islogged(), hint=getNumOfHints())
 
     #POST
     else:
-        # randomly choose a collectible
-        num = random.randint(0, 2) #[0,n]; inclusive
-        if (num == 0):
-            collectible = axolotl()
-        elif (num == 1):
-            collectible = dog()
-        else:
-            collectible= cat()
-        '''
-        collectibles from apis are animal-specific (there is a separate function for each animal type)
-        because each api gives us information in a different format from each other
 
-        collectible is a tuple of (pic, description) given from each function
-        it allows render_template to be in trivia and not in animal-specific functions
-        so it avoids repeating code of rendering template and inserting data into table
-        it will also make it easier to incorporate the differing paths of burn or keep collectible and of login or not
-        '''
+        #if there is a correct_answer stored in sessions; mechanism so user can't refresh to gain new collectible
+        if (session['correct_answer'] != None):
+            # randomly choose a collectible
+            num = random.randint(0, 2) #[0,n]; inclusive
+            if (num == 0):
+                collectible = axolotl()
+            elif (num == 1):
+                collectible = dog()
+            else:
+                collectible= cat()
+            '''
+            collectibles from apis are animal-specific (there is a separate function for each animal type)
+            because each api gives us information in a different format from each other
 
-        # for testing specific animal function
-        # collectible = dog() #cat() #axolotl()
+            collectible is a tuple of (pic, description) given from each function
+            it allows render_template to be in trivia and not in animal-specific functions
+            so it avoids repeating code of rendering template and inserting data into table
+            it will also make it easier to incorporate the differing paths of burn or keep collectible and of login or not
+            '''
 
-        # when api fails
-        if collectible == "Error":
-            return render_template('error.html')
+            # for testing specific animal function
+            # collectible = dog() #cat() #axolotl()
 
-        correct = session['correct_answer']
-        given = request.form['answer']
-        loggedin = islogged()
-        if correct == given or filterSA(correct, given):
+            # when api fails
+            if collectible == "Error":
+                return render_template('error.html')
 
-            # puts this in session for when a non-loggedin user logins to get collectible
-            session['collectible'] = collectible[0]
+            correct = session['correct_answer']
+            given = request.form['answer']
+            loggedin = islogged()
+            if correct == given or filterSA(correct, given):
 
-            # if user is logged in, collectible info gets added to their database
-            if loggedin:
-                # logged in user gets right counters increased
-                rightCounters()
+                # puts this in session for when a non-loggedin user logins to get collectible
+                session['collectible'] = collectible[0]
+                #keeps track of whether user refreshed in gain collectible page
+                session['correct_answer'] = None
 
-                insertCollectible()
+                # if user is logged in, collectible info gets added to their database
+                if loggedin:
+                    # logged in user gets right counters increased
+                    rightCounters()
+                    insertCollectible()
+                    return render_template('collectibles.html', loggedin = loggedin, picture=collectible[0], description = collectible[1])
                 return render_template('collectibles.html', loggedin = loggedin, picture=collectible[0], description = collectible[1])
-            return render_template('collectibles.html', loggedin = loggedin, picture=collectible[0], description = collectible[1])
-        else:
-            if loggedin:
-                # logged in user gets wrong counters increased
-                wrongCounters()
-            return render_template('burn.html', picture=collectible[0], description = collectible[1])
+            else:
+                #keeps track of whether user refreshed in gain collectible page
+                session['correct_answer'] = None
 
+                if loggedin:
+                    # logged in user gets wrong counters increased
+                    wrongCounters()
+                return render_template('burn.html', picture=collectible[0], description = collectible[1])
+
+        #session has no correct_answer stored
+        else:
+            return redirect("/trivia")
 ''' api trivia functions (only 0 and 1, api 2 has diff format); for GET /trivia; return tuples of question, answer choices '''
 
 # processing trivia api 0
