@@ -266,3 +266,7 @@ qinaL -- 2022-01-03 16:35 (for push 2 hrs ago)
 qinaL -- 2021-01-03 17:01
 - consolidated the getNumOfRightQus(), getNumOfGoalRight(), and their wrong counterparts into one function- getNumOfCounter(counter), where counter is a string that denoted which specific counter is being asked for; avoids a lot of repeating code
 - small profile front-end changes
+
+thomasY -- 2022-01-03 21:28
+- Created the function letterFirst to check if the first char of the username is a letter
+  - SQLite3 tables cannot have a number first for its name

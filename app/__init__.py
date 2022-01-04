@@ -107,6 +107,8 @@ def register():
             return render_template("register.html", error="Passwords don't match")
         elif not userCheck(username):
             return render_template("register.html", error="Username should only contain alphanumeric characters")
+        elif not letterFirst(username):
+            return render_template("register.html", error="Username cannot start with a number")
 
         #look in users.db and see if user with username and password combination exists
         db = sqlite3.connect('users.db')
@@ -149,6 +151,10 @@ def userCheck(username):
         if not (char.isdigit() or char.isalpha()):
             return False
     return True
+
+def letterFirst(username):
+    '''Checks if the username starts with a letter and not a number'''
+    return username[0].isalpha()
 
 @app.route("/trivia", methods=['POST', 'GET'])
 def trivia():
