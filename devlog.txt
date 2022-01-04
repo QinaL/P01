@@ -270,3 +270,5 @@ qinaL -- 2021-01-03 17:01
 thomasY -- 2022-01-03 21:28
 - Created the function letterFirst to check if the first char of the username is a letter
   - SQLite3 tables cannot have a number first for its name
+joshuaK -- 2022-01-04 1:03
+- changed repeat to go in other table

@@ -45,7 +45,7 @@ def login():
     #create users table so user can login
     db = sqlite3.connect("users.db")
     c = db.cursor()
-    c.execute("CREATE TABLE IF NOT EXISTS users(username TEXT, password TEXT, Questions TEXT, UNIQUE(username))")
+    c.execute("CREATE TABLE IF NOT EXISTS users(username TEXT, password TEXT, UNIQUE(username))")
     db.commit()
     db.close()
     return render_template('login.html')
@@ -65,7 +65,7 @@ def auth():
         db = sqlite3.connect('users.db')
         c = db.cursor()
         #in case users goes straight to /register w/o running /login code
-        c.execute("CREATE TABLE IF NOT EXISTS users(username TEXT, password TEXT, Questions TEXT, UNIQUE(username))")
+        c.execute("CREATE TABLE IF NOT EXISTS users(username TEXT, password TEXT, UNIQUE(username))")
         c.execute("SELECT username FROM users WHERE username=? ", (username,)) #SYNTAX: ADD , after to refer to entire username, otherwise SQL will count each char as a binding... -_-
         # username inputted by user is not found in database
         if c.fetchone() == None:
@@ -113,7 +113,7 @@ def register():
         #look in users.db and see if user with username and password combination exists
         db = sqlite3.connect('users.db')
         c = db.cursor()
-        c.execute("CREATE TABLE IF NOT EXISTS users(username TEXT, password TEXT, Questions TEXT)")
+        c.execute("CREATE TABLE IF NOT EXISTS users(username TEXT, password TEXT, UNIQUE(username))")
         c.execute("SELECT username AND password FROM users WHERE username=? AND password=?", (username, password))
 
         if (c.fetchone() == None): #user doesn't exist; continue with registration
@@ -262,17 +262,10 @@ def triviaApi0():
 
         #KeyError: 'Username' arises sometimes; if there is a session username...
         if session.get('username') != None:
-            c.execute("SELECT Questions FROM users WHERE username=?", (session['username'],))
-            d = c.fetchone()[0]
-            if d != None and question in d:
-                return triviaApi1()
-            if d != None:
-                insert = d + question
-            else:
-                insert = question
-            print(insert)
-            c.execute("UPDATE users SET Questions=? WHERE username=?", (insert, session['username']))
-            c.execute("SELECT Questions FROM users WHERE username=?", (session['username'],))
+            c.execute("SELECT Questions FROM {user} WHERE Object=?".format(user=session['username']), (question,))
+            if c.fetchone()[0] != None:
+                return triviaApi0()
+            c.execute("INSERT INTO {user}(Type, Object) VALUES('Question', ?)".format(user=session['username']), (question,))
             db.commit()
             db.close()
         session['correct_answer'] = value.get('correctAnswer') #is a string
@@ -314,19 +307,12 @@ def triviaApi1():
 
     #KeyError: 'Username' arises sometimes; if there is a session username...
     if session.get('username') != None:
-        c.execute("SELECT Questions FROM users WHERE username=?", (session['username'],))
-        d = c.fetchone()[0]
-        if d != None and question in d:
-            return triviaApi1()
-        elif d != None:
-            insert = d + question
-        else:
-            insert = question
-        print(insert)
-        c.execute("UPDATE users SET Questions=? WHERE username=?", (insert, session['username']))
-        c.execute("SELECT Questions FROM users WHERE username=?", (session['username'],))
-        db.commit()
-        db.close()
+            c.execute("SELECT Questions FROM {user} WHERE Object=?".format(user=session['username']), (question,))
+            if c.fetchone()[0] != None:
+                return triviaApi1()
+            c.execute("INSERT INTO {user}(Type, Object) VALUES('Question', ?)".format(user=session['username']), (question,))
+            db.commit()
+            db.close()
 
     incorrectAnswers = [] #list for containing all the other answer choices
     for value in questions['results'][0]['incorrect_answers']:
