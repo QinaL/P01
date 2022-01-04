@@ -163,10 +163,6 @@ def trivia():
             triviaInfo = triviaApi1()
         # trivia api 2 does not have own function b/c it uses diff template and it is short-answer while api 0 and 1 are multiple choice
         else:
-            #KeyError: 'Username' arises sometimes; if session username is not set... (check for SA --> API 2)
-            if session.get('username') == None:
-                return redirect("/login") #redirect user to login page
-
             # try except in case trivia api 2 fails
             try:
                 http = urllib.request.urlopen("https://jservice.io/api/random")
@@ -183,8 +179,6 @@ def trivia():
         # if api fails, error page shown; else mc qus are rendered
         if triviaInfo == "Error":
             return render_template('error.html')
-        elif triviaInfo == "KeyError": #if session username is not set... (check for MCQs --> API 0&1)
-            return redirect("/login") #redirect user to login page so they can set it (by logging in)
 
         print("~~~~~~~~~~")
         print(triviaInfo)
@@ -221,15 +215,15 @@ def trivia():
         given = request.form['answer']
         loggedin = islogged()
         if correct == given or filterSA(correct, given):
-            
+
             # puts this in session for when a non-loggedin user logins to get collectible
             session['collectible'] = collectible[0]
 
             # if user is logged in, collectible info gets added to their database
             if loggedin:
-                # logged in user gets right counters increased 
+                # logged in user gets right counters increased
                 rightCounters()
-                
+
                 insertCollectible()
                 return render_template('collectibles.html', loggedin = loggedin, picture=collectible[0], description = collectible[1])
             return render_template('collectibles.html', loggedin = loggedin, picture=collectible[0], description = collectible[1])
@@ -260,9 +254,7 @@ def triviaApi0():
         db = sqlite3.connect("users.db")
         c = db.cursor()
 
-        #KeyError: 'Username' arises sometimes; if there is no session username...
-        print("bbbbbb")
-        print(session.get('username'))
+        #KeyError: 'Username' arises sometimes; if there is a session username...
         if session.get('username') != None:
             c.execute("SELECT Questions FROM users WHERE username=?", (session['username'],))
             d = c.fetchone()[0]
@@ -314,7 +306,7 @@ def triviaApi1():
     db = sqlite3.connect("users.db")
     c = db.cursor()
 
-    #KeyError: 'Username' arises sometimes; if there is no session username...
+    #KeyError: 'Username' arises sometimes; if there is a session username...
     if session.get('username') != None:
         c.execute("SELECT Questions FROM users WHERE username=?", (session['username'],))
         d = c.fetchone()[0]
@@ -618,16 +610,16 @@ def getNumOfAchievements():
     else:
         count=-1
     return count
-    
+
 def rightCounters():
     db = sqlite3.connect('users.db')
     c = db.cursor()
-    
+
     # increases total right counter by 1
     totalRight = getNumOfCounter("Total Right")
     totalRight += 1
     c.execute("UPDATE {name} SET Number = ? WHERE OBJECT =?".format(name=session['username']), (totalRight, "Total Right",))
-    
+
     # increases goal right counter by 1
     goalRight = getNumOfCounter("Goal Right")
     goalRight += 1
@@ -643,16 +635,16 @@ def rightCounters():
     db.commit()
     db.close()
     return 0
-    
+
 def wrongCounters():
     db = sqlite3.connect('users.db')
     c = db.cursor()
-    
+
     # increases total wrong counter by 1
     totalWrong = getNumOfCounter("Total Wrong")
     totalWrong += 1
     c.execute("UPDATE {name} SET Number = ? WHERE OBJECT =?".format(name=session['username']), (totalWrong, "Total Wrong",))
-    
+
     # increases goal wrong counter by 1
     goalWrong = getNumOfCounter("Goal Wrong")
     goalWrong += 1
