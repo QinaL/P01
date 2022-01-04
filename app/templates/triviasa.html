@@ -21,13 +21,17 @@
     </form>
 <br>
 {% if logged %}
-Hints You Have: {{hint}}
-{% if hint > 0 %}
-<form action="/hintSA" method="POST">
-    <input type="hidden" name="Question" value="{{question}}">
-    <input class="btn btn-secondary" type="submit" name="Hint Button" value="Use Hint">
-</form>
-{% endif %}
+  Hints You Have: {{hint}}
+  {% if hint > 0 %}
+  <form action="/hintSA" method="POST">
+      <input type="hidden" name="Question" value="{{question}}">
+      <input class="btn btn-secondary" type="submit" name="Hint Button" value="Use Hint">
+  </form>
+  {% endif %}
+
+  <br>
+  Fire Extinguishers You Have: {{fire}}
+
 {% endif %}
 
 {% endblock %}

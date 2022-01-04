@@ -5,7 +5,7 @@
 <style>
     /* insert css specific to individual page */
     input{
-     margin: 2px;   
+     margin: 2px;
     }
 </style>
 {% endblock %}
@@ -23,14 +23,18 @@
 <br>
 
 {% if logged %}
-Hints You Have: {{hint}}
-{% if hint > 0 %}
-<form action="/hint" method="POST">
-    <input type="hidden" name="Question" value="{{question}}">
-    <input type="hidden" name="Choices" value="{{choices}}">
-    <input class="btn btn-secondary" type="submit" name="Hint Button" value="Use Hint">
-</form>
-{% endif %}
+  Hints You Have: {{hint}}
+  {% if hint > 0 %}
+  <form action="/hint" method="POST">
+      <input type="hidden" name="Question" value="{{question}}">
+      <input type="hidden" name="Choices" value="{{choices}}">
+      <input class="btn btn-secondary" type="submit" name="Hint Button" value="Use Hint">
+  </form>
+  {% endif %}
+
+  <br>
+  Fire Extinguishers You Have: {{fire}}
+
 {% endif %}
 
 {% endblock %}

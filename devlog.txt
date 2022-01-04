@@ -274,3 +274,4 @@ thomasY -- 2022-01-03 21:28
 yayingLL -- 2022-01-04 00:53:23
 - fixed how user can gain a new collectible by simply refreshing gain page
   - redirect user back to more trivia questions instead
+- display number of fire extinguishers in html pages
