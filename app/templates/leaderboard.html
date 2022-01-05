@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %} Trivia {% endblock %}
+
+{% block css %}
+<style>
+    /* insert css specific to individual page */
+    input{
+     margin: 2px;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+
+{% for i in order %}
+
+<br>1. {{i[0]}}</br>
+
+{% endfor %}
+
+{% endblock %}

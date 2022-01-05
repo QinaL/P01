@@ -288,3 +288,6 @@ thomasY -- 2022-01-04 21:12
   - Database: corrected table outlines and example table
   - Sitemap: corrected for new layout of site
   - Tied up loose ends (any question like points in the design doc)
+
+joshuaK -- 2022-01-04 21:31
+- added leaderboard
