@@ -543,6 +543,26 @@ def hintUsed():
     db.close()
     return 0
 
+# extinguish burning collectible if user is logged in
+@app.route("/extinguish", methods=['POST', 'GET'])
+def extinguish():
+    # if user manually goes here, they are redirected /trivia
+    if request.method == "GET":
+        return redirect("/trivia")
+    # when extinguish button is pressed
+    else:
+        pic = request.form.get("Collectible")
+        desc = request.form.get("Description")
+
+        # decrease num of extinguishers in db
+        #hintUsed()
+        # insert collectible into individual's table
+        session["collectible"] = pic
+        insertCollectible()
+
+        #collectible is safe from flames now; display gain page with that same collectible
+        return render_template('collectibles.html', loggedin = islogged(), picture=pic, description=desc)
+
 @app.route("/profile", methods=['POST', 'GET'])
 def profile():
 

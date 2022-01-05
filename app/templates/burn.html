@@ -42,10 +42,10 @@
   QUICK! Can't bear to see this cute creature burn in front of your eyes? <br>
   Save 'em!
   {% if fire > 0 %}
-  <form action="/hint" method="POST">
-      <input type="hidden" name="Question" value="{{question}}">
-      <input type="hidden" name="Choices" value="{{choices}}">
-      <input class="btn btn-secondary" type="submit" name="Hint Button" value="Use Extinguisher">
+  <form action="/extinguish" method="POST">
+      <input type="hidden" name="Collectible" value="{{picture}}">
+      <input type="hidden" name="Description" value="{{description}}">
+      <input class="btn btn-secondary" type="submit" name="Extinguisher Button" value="Use Extinguisher">
   </form>
   Fire Extinguishers You Have: {{fire}}
   {% endif %}
