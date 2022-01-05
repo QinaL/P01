@@ -300,3 +300,13 @@ thomasY -- 2022-01-04 21:53
 thomasY -- 2022-01-04 22:15
 - Updated leaderboard to show how many collectibles each user has
 - Updated burn to always show the number of fire extinguishers if the user is logged in
+
+qinaL -- 2022-01-04 22:45
+- testing and created ready-for-demo admin account (98 Collectibles, 8/10 right, 9/10 wrong)
+    - db pushed to repo (will have admin account and OtherUser1; both passwords are 1)
+- got rid of some extraneous code (printed to terminal for debugging)
+- some small front-end additions/changes (mainly to profile stuff)
+- issue found: if not logged in and get a collectible, can log in, the collectible is added but not the right qu counters;  fixed
+- issue found: out of 117 qus tested; twice a qu or answer choices were empty; i added a check for if they're empty; hopefully fixed
+
+
