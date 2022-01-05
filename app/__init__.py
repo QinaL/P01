@@ -242,7 +242,7 @@ def trivia():
                 if loggedin:
                     # logged in user gets wrong counters increased
                     wrongCounters()
-                return render_template('burn.html', picture=collectible[0], description = collectible[1], correct=correct)
+                return render_template('burn.html', logged = loggedin, picture=collectible[0], description = collectible[1], correct=correct, fire=getNumOfFireExtinguishers())
 
         #session has no correct_answer stored
         else:
