@@ -8,6 +8,10 @@
     .first{
         color: black;
         background-color: pink;
+        width: 65%;
+        margin: auto;
+        padding: 7px;
+        border-radius: 15px;
     }
 </style>
 {% else %}
@@ -15,6 +19,10 @@
     .first{
         color: grey;
         background-color: lightgray;
+        width: 65%;
+        margin: auto;
+        padding: 7px;
+        border-radius: 15px;
     }
 </style>
 {% endif %}
@@ -24,6 +32,10 @@
     .master{
         color: black;
         background-color: pink;
+        width: 65%;
+        margin: auto;
+        padding: 7px;
+        border-radius: 15px;
     }
 </style>
 {% else %}
@@ -31,6 +43,10 @@
     .master{
         color: grey;
         background-color: lightgray;
+        width: 65%;
+        margin: auto;
+        padding: 7px;
+        border-radius: 15px;
     }
 </style>
 {% endif %}
@@ -40,6 +56,10 @@
     .god{
         color: black;
         background-color: pink;
+        width: 65%;
+        margin: auto;
+        padding: 7px;
+        border-radius: 15px;
     }
 </style>
 {% else %}
@@ -47,6 +67,10 @@
     .god{
         color: grey;
         background-color: lightgray;
+        width: 65%;
+        margin: auto;
+        padding: 7px;
+        border-radius: 15px;
     }
 </style>
 {% endif %}
@@ -56,6 +80,7 @@
 {% block body %}
 <h1>Achievements</h1>
 <br>
+<div class="all">
 <div class="first">
     <h2> First Touch </h2>
     <p> Get Your First Collectible </p>
@@ -73,5 +98,5 @@
     <p> Get 100 Collectibles </p>
     <p> Status: {% if god %} Achieved {% else %} Not Achieved {% endif %} </p>
 </div>
-
+</div>
 {% endblock %}
