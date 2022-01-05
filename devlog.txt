@@ -296,3 +296,7 @@ thomasY -- 2022-01-04 21:53
 - Design Doc Updates
   - Moved questions to the user data table rather than users
   - Added leaderboard to the site map
+
+thomasY -- 2022-01-04 22:15
+- Updated leaderboard to show how many collectibles each user has
+- Updated burn to always show the number of fire extinguishers if the user is logged in

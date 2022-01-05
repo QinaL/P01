@@ -38,8 +38,10 @@
 <br>
 {{description}}
 {% if logged %}
+<br><br>
+  Fire Extinguishers You Have: {{fire}}
   {% if fire > 0 %}
-  <br> <br>
+  <br>
   QUICK! Can't bear to see this cute creature burn in front of your eyes? <br>
   Save 'em!
   <form action="/extinguish" method="POST">
@@ -47,7 +49,6 @@
       <input type="hidden" name="Description" value="{{description}}">
       <input class="btn btn-secondary" type="submit" name="Extinguisher Button" value="Use Extinguisher">
   </form>
-  Fire Extinguishers You Have: {{fire}}
   {% endif %}
 {% endif %}
 
