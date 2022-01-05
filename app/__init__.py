@@ -115,7 +115,7 @@ def register():
         db = sqlite3.connect('users.db')
         c = db.cursor()
         c.execute("CREATE TABLE IF NOT EXISTS users(username TEXT, password TEXT, UNIQUE(username))")
-        c.execute("SELECT username AND password FROM users WHERE username=?", (username))
+        c.execute("SELECT username FROM users WHERE username=?", (username,))
 
         if (c.fetchone() == None): #user doesn't exist; continue with registration
             c.execute("INSERT INTO users(username, password) VALUES(?, ?)", (username, password))
