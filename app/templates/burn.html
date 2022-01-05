@@ -38,10 +38,10 @@
 <br>
 {{description}}
 {% if logged %}
+  {% if fire > 0 %}
   <br> <br>
   QUICK! Can't bear to see this cute creature burn in front of your eyes? <br>
   Save 'em!
-  {% if fire > 0 %}
   <form action="/extinguish" method="POST">
       <input type="hidden" name="Collectible" value="{{picture}}">
       <input type="hidden" name="Description" value="{{description}}">

@@ -555,13 +555,24 @@ def extinguish():
         desc = request.form.get("Description")
 
         # decrease num of extinguishers in db
-        #hintUsed()
+        extinguisherUsed()
         # insert collectible into individual's table
         session["collectible"] = pic
         insertCollectible()
 
         #collectible is safe from flames now; display gain page with that same collectible
         return render_template('collectibles.html', loggedin = islogged(), picture=pic, description=desc)
+
+# decrease number of fire extinguishers in user's table
+def extinguisherUsed():
+    fire=getNumOfFireExtinguishers()
+    fire -= 1
+    db = sqlite3.connect('users.db')
+    c = db.cursor()
+    c.execute("UPDATE {name} SET Number = ? WHERE Object=?".format(name=session['username']), (fire, "Fire Extinguisher",))
+    db.commit()
+    db.close()
+    return 0
 
 @app.route("/profile", methods=['POST', 'GET'])
 def profile():
