@@ -16,14 +16,15 @@ def home():
     # when logged out user answers qu right, collectibe is added to session; then when they log in, collectible in session is added to table
     if 'collectible' in session.keys() and islogged:
         insertCollectible()
+        rightCounters()
+    ''' #for purely testing
     print(session)
-    # for purely testing
     if islogged():
         db = sqlite3.connect('users.db')
         c = db.cursor()
         c.execute("SELECT * FROM {name}".format(name=session['username']))
         print(c.fetchall())
-
+    '''
     return render_template('home.html')
 
 @app.route("/logout",  methods=['GET', 'POST'])
@@ -175,16 +176,28 @@ def trivia():
                 questions = json.load(http)
             except:
                 return render_template('error.html')
-
+                        
+            # print(questions[0]['question'])
+            
             correct= questions[0]['answer']
             # for api 2; sometimes ans is in form of <i>ans</i>, cleanSA() gets rid of <> part
             session['correct_answer'] = cleanSA(correct)
+            
+            # in case question or choices is empty (happens semi-rarely, hopefully this prevents that)
+            question= questions[0]['question']
+            if question == None:
+                return redirect('/trivia')
+            
             print(session['correct_answer'])
-            return render_template("triviasa.html", question=questions[0]['question'], logged=islogged(), hint=getNumOfHints(), hinted=False)
+            return render_template("triviasa.html", question=question, logged=islogged(), hint=getNumOfHints(), hinted=False)
 
         # if api fails, error page shown; else mc qus are rendered
         if triviaInfo == "Error":
             return render_template('error.html')
+        
+        # in case question or choices is empty (happens semi-rarely, hopefully this prevents that)
+        if triviaInfo[0] == None or triviaInfo[1] == None:
+            return redirect('/trivia')
 
         return render_template('trivia.html', question=triviaInfo[0], choices=triviaInfo[1], logged=islogged(), hint=getNumOfHints())
 
@@ -478,6 +491,7 @@ def hint():
         for char in removeChar:
             choices = choices.replace(char,"")
         choices = list(choices.split(", "))
+        
         numChoices = len(choices)
         # gets rid of one wrong answer choice
         correct = session['correct_answer']
