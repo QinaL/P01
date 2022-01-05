@@ -753,47 +753,6 @@ def getNumOfCounter(counter):
         counter = -1
     return counter
 
-'''
-def getNumOfRightQus():
-    if islogged():
-        db = sqlite3.connect('users.db')
-        c = db.cursor()
-        c.execute("SELECT Number FROM {name} WHERE Object=?".format(name=session['username']), ("Total Right",))
-        totalRight = c.fetchone()[0] #c.fetchone gives a tuple, so [0] to get the number
-    else:
-        totalRight=-1
-    return totalRight
-
-def getNumOfGoalRight():
-    if islogged():
-        db = sqlite3.connect('users.db')
-        c = db.cursor()
-        c.execute("SELECT Number FROM {name} WHERE Object=?".format(name=session['username']), ("Goal Right",))
-        goalRight = c.fetchone()[0] #c.fetchone gives a tuple, so [0] to get the number
-    else:
-        goalRight=-1
-    return goalRight
-
-def getNumOfWrongQus():
-    if islogged():
-        db = sqlite3.connect('users.db')
-        c = db.cursor()
-        c.execute("SELECT Number FROM {name} WHERE Object=?".format(name=session['username']), ("Total Wrong",))
-        totalWrong = c.fetchone()[0] #c.fetchone gives a tuple, so [0] to get the number
-    else:
-        totalWrong=-1
-    return totalWrong
-
-def getNumOfGoalWrong():
-    if islogged():
-        db = sqlite3.connect('users.db')
-        c = db.cursor()
-        c.execute("SELECT Number FROM {name} WHERE Object=?".format(name=session['username']), ("Goal Wrong",))
-        goalWrong = c.fetchone()[0] #c.fetchone gives a tuple, so [0] to get the number
-    else:
-        goalWrong=-1
-    return goalWrong
-'''
 @app.route("/leaderboard")
 def leaderboard():
     db = sqlite3.connect("users.db")
