@@ -282,3 +282,6 @@ joshuaK -- 2022-01-04 1:03
 joshuaK -- 2022-01-04 9:16
 - Fixed displaying correct answer if wrong
 - no repeat collectibles
+
+joshuaK -- 2022-01-04 21:31
+- added leaderboard

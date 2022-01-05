@@ -749,6 +749,19 @@ def getNumOfGoalWrong():
         goalWrong=-1
     return goalWrong
 '''
+@app.route("/leaderboard")
+def leaderboard():
+    db = sqlite3.connect("users.db")
+    c = db.cursor()
+    c.execute("CREATE TABLE IF NOT EXISTS users(username TEXT, password TEXT, UNIQUE(username))")
+    c.execute("SELECT * FROM users")
+    d = c.fetchall()
+    order = {}
+    for i in d:
+        c.execute("SELECT COUNT(*) FROM {user} WHERE Type='Collectible'".format(user=i[0]))
+        order['{key}'.format(key=i[0])] = c.fetchone()[0]
+    order = sorted(order.items(), key=lambda ord : (ord[1], ord[0]), reverse=True)
+    return render_template("leaderboard.html", order=order)
 
 if __name__ == "__main__":
     app.debug = True
