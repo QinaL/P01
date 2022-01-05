@@ -478,14 +478,14 @@ def hint():
         for char in removeChar:
             choices = choices.replace(char,"")
         choices = list(choices.split(", "))
-
+        numChoices = len(choices)
         # gets rid of one wrong answer choice
         correct = session['correct_answer']
         print(correct)
-        for ans in choices:
-            if ans != correct:
-                choices.remove(ans)
-                break
+        while (numChoices==len(choices)):
+            index = random.randint(0, numChoices-1)
+            if choices[index] != correct:
+                choices.pop(index)
 
         # decrease num of hints in db
         hintUsed()
