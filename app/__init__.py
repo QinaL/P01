@@ -180,13 +180,13 @@ def trivia():
             # for api 2; sometimes ans is in form of <i>ans</i>, cleanSA() gets rid of <> part
             session['correct_answer'] = cleanSA(correct)
             print(session['correct_answer'])
-            return render_template("triviasa.html", question=questions[0]['question'], logged=islogged(), hint=getNumOfHints(), hinted=False, fire=getNumOfFireExtinguishers())
+            return render_template("triviasa.html", question=questions[0]['question'], logged=islogged(), hint=getNumOfHints(), hinted=False)
 
         # if api fails, error page shown; else mc qus are rendered
         if triviaInfo == "Error":
             return render_template('error.html')
 
-        return render_template('trivia.html', question=triviaInfo[0], choices=triviaInfo[1], logged=islogged(), hint=getNumOfHints(), fire=getNumOfFireExtinguishers())
+        return render_template('trivia.html', question=triviaInfo[0], choices=triviaInfo[1], logged=islogged(), hint=getNumOfHints())
 
     #POST
     else:
@@ -242,7 +242,7 @@ def trivia():
                 if loggedin:
                     # logged in user gets wrong counters increased
                     wrongCounters()
-                return render_template('burn.html', picture=collectible[0], description = collectible[1], correct=correct)
+                return render_template('burn.html', logged = loggedin, picture=collectible[0], description = collectible[1], correct=correct, fire=getNumOfFireExtinguishers())
 
         #session has no correct_answer stored
         else:
@@ -495,7 +495,7 @@ def hint():
         if len(choices) == 1:
             logged = False # even tho, user is logged in, this is manually changed to False to make hint button disappear
 
-        return render_template('trivia.html', question=question, choices=choices, logged=logged, hint=getNumOfHints(), fire=getNumOfFireExtinguishers())
+        return render_template('trivia.html', question=question, choices=choices, logged=logged, hint=getNumOfHints())
 
 
 # gets how many hints a user has
@@ -530,7 +530,7 @@ def hintsa():
         hintUsed()
 
         # hint button is not longered shown; can't use mutliple hints in same SA question (unlike mc)
-        return render_template('triviasa.html', question=question, hinted=True, clue=clue, fire=getNumOfFireExtinguishers())
+        return render_template('triviasa.html', question=question, hinted=True, clue=clue)
 
 # decrease number of hints in user's table
 def hintUsed():
@@ -628,7 +628,7 @@ def getAchievements():
 
 def getNumOfAchievements():
     if islogged():
-        count = 0;
+        count = 0
         achievements = getAchievements()
         for status in achievements:
             if status:

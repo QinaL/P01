@@ -283,5 +283,11 @@ joshuaK -- 2022-01-04 9:16
 - Fixed displaying correct answer if wrong
 - no repeat collectibles
 
+thomasY -- 2022-01-04 21:12
+- Design Doc Updates
+  - Database: corrected table outlines and example table
+  - Sitemap: corrected for new layout of site
+  - Tied up loose ends (any question like points in the design doc)
+
 joshuaK -- 2022-01-04 21:31
 - added leaderboard
