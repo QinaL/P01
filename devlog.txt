@@ -289,6 +289,10 @@ thomasY -- 2022-01-04 21:12
   - Sitemap: corrected for new layout of site
   - Tied up loose ends (any question like points in the design doc)
 
+  yayingLL -- 2022-01-04 21:20
+  - added fire extinguisher option to burn pages (if user is logged in)
+  - if used, decrease number of extinguishers + add that collectible to the user
+
 joshuaK -- 2022-01-04 21:31
 - added leaderboard
 
@@ -308,5 +312,3 @@ qinaL -- 2022-01-04 22:45
 - some small front-end additions/changes (mainly to profile stuff)
 - issue found: if not logged in and get a collectible, can log in, the collectible is added but not the right qu counters;  fixed
 - issue found: out of 117 qus tested; twice a qu or answer choices were empty; i added a check for if they're empty; hopefully fixed
-
-
