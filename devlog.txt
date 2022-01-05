@@ -291,3 +291,8 @@ thomasY -- 2022-01-04 21:12
 
 joshuaK -- 2022-01-04 21:31
 - added leaderboard
+
+thomasY -- 2022-01-04 21:53
+- Design Doc Updates
+  - Moved questions to the user data table rather than users
+  - Added leaderboard to the site map
