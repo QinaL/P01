@@ -115,7 +115,7 @@ def register():
         db = sqlite3.connect('users.db')
         c = db.cursor()
         c.execute("CREATE TABLE IF NOT EXISTS users(username TEXT, password TEXT, UNIQUE(username))")
-        c.execute("SELECT username AND password FROM users WHERE username=? AND password=?", (username, password))
+        c.execute("SELECT username AND password FROM users WHERE username=?", (username))
 
         if (c.fetchone() == None): #user doesn't exist; continue with registration
             c.execute("INSERT INTO users(username, password) VALUES(?, ?)", (username, password))
@@ -176,25 +176,25 @@ def trivia():
                 questions = json.load(http)
             except:
                 return render_template('error.html')
-                        
+
             # print(questions[0]['question'])
-            
+
             correct= questions[0]['answer']
             # for api 2; sometimes ans is in form of <i>ans</i>, cleanSA() gets rid of <> part
             session['correct_answer'] = cleanSA(correct)
-            
+
             # in case question or choices is empty (happens semi-rarely, hopefully this prevents that)
             question= questions[0]['question']
             if question == None:
                 return redirect('/trivia')
-            
+
             print(session['correct_answer'])
             return render_template("triviasa.html", question=question, logged=islogged(), hint=getNumOfHints(), hinted=False)
 
         # if api fails, error page shown; else mc qus are rendered
         if triviaInfo == "Error":
             return render_template('error.html')
-        
+
         # in case question or choices is empty (happens semi-rarely, hopefully this prevents that)
         if triviaInfo[0] == None or triviaInfo[1] == None:
             return redirect('/trivia')
@@ -491,7 +491,7 @@ def hint():
         for char in removeChar:
             choices = choices.replace(char,"")
         choices = list(choices.split(", "))
-        
+
         numChoices = len(choices)
         # gets rid of one wrong answer choice
         correct = session['correct_answer']
